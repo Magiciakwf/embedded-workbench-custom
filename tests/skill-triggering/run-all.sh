@@ -32,7 +32,7 @@ run_test "HardFault crash → hardfault-triage" "hardfault-triage" "hardfault-cr
 run_test "State machine retry → state-machine-design" "state-machine-design" "state-machine-retry.txt" "trigger"
 run_test "Keil build error → keil-mdk-build" "keil-mdk-build" "keil-build.txt" "trigger"
 run_test "Explicit skill request → hardfault-triage" "hardfault-triage" "explicit-hardfault.txt" "trigger"
-run_test "FreeRTOS ISR boundary → embedded-firmware-dev" "embedded-firmware-dev" "freertos-isr-boundary.txt" "trigger"
+run_test "FreeRTOS ISR runtime failure → freertos-debug" "freertos-debug" "freertos-isr-boundary.txt" "trigger"
 
 # Negative tests (should NOT trigger)
 echo "===== NEGATIVE TESTS (should NOT trigger) ====="
@@ -46,6 +46,15 @@ run_test "Desktop C++ crash → NOT c-cpp-dev" "c-cpp-dev" "desktop-cpp-no-skill
 echo "===== LOAD ORDER TESTS ====="
 echo ""
 run_test "Debug → StateMachine load order" "debug-methodology" "multi-skill-load-order.txt" "trigger"
+
+# Structured initial-routing, positive, negative and conflict cases.
+# Keep the original Claude presence runner; this additional runner checks order.
+echo "===== INITIAL ROUTING / CONFLICT TESTS ====="
+if node "$SCRIPT_DIR/run-claude-routing.mjs"; then
+    PASS=$((PASS + 1))
+else
+    FAIL=$((FAIL + 1))
+fi
 
 echo "===== SUMMARY ====="
 echo "Passed: $PASS"

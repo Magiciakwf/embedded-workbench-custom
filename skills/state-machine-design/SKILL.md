@@ -4,7 +4,7 @@ description: "Use when reviewing or fixing async protocols, retries, ACK/NACK ha
 ---
 
 <HARD-GATE>
-This is a domain implementation skill. If you are planning, designing, or entering plan mode — load `Skill("embedded-workbench")` first to activate the workflow gates (Plan Verification Gate, Approval Gate, Closure Gate). Domain skills carry implementation guidance, not workflow enforcement.
+This is a domain implementation skill. If you are planning, designing, or entering plan mode — load `Skill("embedded-workbench")` once to activate the workflow gates (Plan Verification Gate, Approval Gate, Closure Gate), or reuse it if already loaded. Do not recursively reload the coordinator. Domain skills carry implementation guidance, not workflow enforcement.
 </HARD-GATE>
 
 # State Machine Design
@@ -187,4 +187,4 @@ void retry_forever(void) {
 
 - When diagnostics point to an architecture-level or state-machine design defect, proactively offer high-level remediation focused on boundary clarity, lifecycle contracts, and reversible transitions — don't just propose ad-hoc runtime patches.
 
-**REQUIRED SUB-SKILL:** If you find a state machine bug, also load `Skill("debug-methodology")` to apply structured root-cause analysis. If the bug involves async lifecycle flags or hardware events, load `Skill("embedded-firmware-dev")`. If the state machine lockup triggers a watchdog reset or HardFault, load `Skill("hardfault-triage")`.
+Add a specialist only for an unresolved dependency: `debug-methodology` for causal reconstruction after localization, `embedded-firmware-dev` for a missing lifecycle contract, `freertos-debug` for established task synchronization failure, or `stm32-driver-debug` for a localized STM32 peripheral path. An observed Cortex-M fault with incomplete capture uses `hardfault-triage`; complete trustworthy evidence uses `hardfault-analyzer`. A watchdog reset alone does not establish a fault exception. Reuse already loaded guidance rather than cycling between skills, and keep review-only requests read-only; requested code repairs use `embedded-code-generator`.

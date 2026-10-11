@@ -1,13 +1,17 @@
 ---
 name: debug-methodology
-description: "Use when debugging embedded firmware issues — analyzing crash logs, investigating state machine lockups, tracing sensor/signal anomalies, or performing structured root-cause analysis after a crash has been located. For fault-register and stack-frame triage, load hardfault-triage first."
+description: "Use when an embedded fault domain is already localized and systematic root-cause work needs a timeline, call chain, state changes and evidence. Not unexplained system-wide failures (embedded-bug-investigator) or primary RTOS/peripheral/fault intake."
 ---
 
 # Debug Methodology
 
 Debug by tracing values, not symptoms. These patterns come from real debugging sessions where surface-level fixes failed and root-cause analysis succeeded.
 
-**REQUIRED BACKGROUND:** If the issue involves state machines or protocol timeouts, load `Skill("state-machine-design")` first. If the issue involves FreeRTOS tasks, ISRs, or NVM storage, load `Skill("embedded-firmware-dev")` first. Understand the domain rules before applying debugging methodology.
+## Routing boundary
+
+Use after localization, for example an established UART DMA path, task synchronization path or state-machine defect. Do not compete with `embedded-bug-investigator` for an unknown fault domain.
+
+An established RTOS failure starts with `freertos-debug`; STM32 peripheral failures start with `stm32-driver-debug`. Add this methodology only when their investigation needs timeline/call-chain/state reconstruction. Consult `state-machine-design` for a missing transition contract or `embedded-firmware-dev` for a specific lifecycle/storage rule; do not preload them or reload a skill already used in this task.
 
 ## Red Flags
 

@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "semantics": "expected is the allowed first specialist (empty means no required first specialist); excluded forbids initial specialist preloading, not later evidence-driven escalation. embedded-workbench is a coordinator and does not count as the first specialist.",
+  "cases": [
+    {
+      "id": "conflict-unknown-hang",
+      "kind": "conflict",
+      "prompt": "设备偶发运行几十分钟后卡死，现在还不知道是 Queue、DMA、UART 还是任务调度问题。",
+      "expected": [
+        "embedded-bug-investigator"
+      ],
+      "excluded": [
+        "freertos-debug",
+        "stm32-driver-debug",
+        "debug-methodology"
+      ]
+    },
+    {
+      "id": "conflict-notification-after-irq",
+      "kind": "conflict",
+      "prompt": "已经确认 DMA 和 UART IRQ 正常，但 FreeRTOS Task Notification 偶尔丢失。",
+      "expected": [
+        "freertos-debug"
+      ],
+      "excluded": [
+        "embedded-bug-investigator",
+        "stm32-driver-debug",
+        "embedded-firmware-dev"
+      ]
+    },
+    {
+      "id": "conflict-fault-no-evidence",
+      "kind": "conflict",
+      "prompt": "程序进入 HardFault，我现在只有现象，没有寄存器信息，下一步怎么查？",
+      "expected": [
+        "hardfault-triage"
+      ],
+      "excluded": [
+        "hardfault-analyzer",
+        "debug-methodology"
+      ]
+    },
+    {
+      "id": "conflict-fault-complete-evidence",
+      "kind": "conflict",
+      "prompt": "已有 CFSR、HFSR、BFAR、EXC_RETURN、PSP、stacked frame 和匹配 ELF，请分析根因。",
+      "expected": [
+        "hardfault-analyzer"
+      ],
+      "excluded": [
+        "hardfault-triage"
+      ]
+    },
+    {
+      "id": "conflict-queue-design",
+      "kind": "conflict",
+      "prompt": "帮我设计一个 FreeRTOS Queue + Task Notification 的通信模块。",
+      "expected": [
+        "embedded-firmware-dev"
+      ],
+      "excluded": [
+        "freertos-debug",
+        "embedded-code-generator"
+      ]
+    },
+    {
+      "id": "conflict-queue-runtime",
+      "kind": "conflict",
+      "prompt": "这个 Queue + Task Notification 已运行，但偶发任务永远收不到通知。",
+      "expected": [
+        "freertos-debug"
+      ],
+      "excluded": [
+        "embedded-firmware-dev",
+        "embedded-bug-investigator"
+      ]
+    },
+    {
+      "id": "conflict-keil-argument",
+      "kind": "conflict",
+      "prompt": "Keil AC6 编译报 unknown argument。",
+      "expected": [
+        "keil-mdk-build"
+      ],
+      "excluded": [
+        "firmware-memory-analyzer"
+      ]
+    },
+    {
+      "id": "conflict-ram-attribution",
+      "kind": "conflict",
+      "prompt": "ELF 和 MAP 显示 RAM 快满了，分析具体是谁占的。",
+      "expected": [
+        "firmware-memory-analyzer"
+      ],
+      "excluded": [
+        "keil-mdk-build"
+      ]
+    },
+    {
+      "id": "conflict-local-ownership",
+      "kind": "conflict",
+      "prompt": "解释并优化这个函数的 ownership 和 volatile 使用。目标是 32-bit ARM 嵌入式工程里的单个函数。",
+      "expected": [
+        "c-cpp-dev"
+      ],
+      "excluded": [
+        "embedded-code-generator",
+        "embedded-code-review"
+      ]
+    },
+    {
+      "id": "conflict-new-uart-module",
+      "kind": "conflict",
+      "prompt": "在现有 STM32 工程中新建 UART DMA 环形缓冲模块并完成集成。",
+      "expected": [
+        "embedded-code-generator"
+      ],
+      "excluded": [
+        "c-cpp-dev",
+        "stm32-driver-debug",
+        "embedded-code-review"
+      ]
+    },
+    {
+      "id": "conflict-review-only",
+      "kind": "conflict",
+      "prompt": "审查 UART DMA 模块，只报告问题，不修改代码。",
+      "expected": [
+        "embedded-code-review"
+      ],
+      "excluded": [
+        "embedded-code-generator",
+        "stm32-driver-debug"
+      ]
+    },
+    {
+      "id": "conflict-repair-followup",
+      "kind": "conflict",
+      "prompt": "刚才只读审查已确认 UART DMA 模块存在缓冲区生命周期缺陷。修复刚才发现的问题并完成构建验证。",
+      "expected": [
+        "embedded-code-generator"
+      ],
+      "excluded": [
+        "embedded-code-review"
+      ]
+    },
+    {
+      "id": "positive-localized-methodology",
+      "kind": "positive",
+      "prompt": "已经定位异常在 UART DMA 重启后的状态变化路径，需要系统化重建时间线、调用链和根因证据。外设配置已核对正确。",
+      "expected": [
+        "debug-methodology"
+      ],
+      "excluded": [
+        "embedded-bug-investigator"
+      ]
+    },
+    {
+      "id": "positive-stm32-path",
+      "kind": "positive",
+      "prompt": "STM32 UART RX 的硬件事件标志已置位，但 IRQ 不进入。请检查 RCC、GPIO AF、NVIC、vector 和 HAL handler 路径。没有 RTOS。",
+      "expected": [
+        "stm32-driver-debug"
+      ],
+      "excluded": [
+        "freertos-debug"
+      ]
+    },
+    {
+      "id": "positive-datasheet",
+      "kind": "positive",
+      "prompt": "根据提供的 exact-part reference manual 和 errata，核对 ADC 初始化顺序、寄存器 bit field 和 electrical timing 限制。只回答这些器件事实。",
+      "expected": [
+        "datasheet-reader"
+      ],
+      "excluded": [
+        "stm32-driver-debug",
+        "embedded-bug-investigator"
+      ]
+    },
+    {
+      "id": "positive-memory",
+      "kind": "positive",
+      "prompt": "这份 Keil MAP 与 scatter 文件里 .data 的 VMA/LMA 和 RAM section placement 是否正确？分析 Flash 与 RAM 预算。构建已经成功。",
+      "expected": [
+        "firmware-memory-analyzer"
+      ],
+      "excluded": [
+        "keil-mdk-build"
+      ]
+    },
+    {
+      "id": "positive-investigator",
+      "kind": "positive",
+      "prompt": "板子偶发复位，现在不确定是电源、watchdog、内存破坏还是 RTOS，先帮我确定故障域和实验。",
+      "expected": [
+        "embedded-bug-investigator"
+      ],
+      "excluded": [
+        "hardfault-triage",
+        "freertos-debug"
+      ]
+    },
+    {
+      "id": "positive-generator-design-implementation",
+      "kind": "positive",
+      "prompt": "请直接实现并集成 FreeRTOS Queue + Task Notification 通信模块，完成构建验证。",
+      "expected": [
+        "embedded-code-generator"
+      ],
+      "excluded": [
+        "freertos-debug"
+      ]
+    },
+    {
+      "id": "positive-review-audit",
+      "kind": "positive",
+      "prompt": "对这份嵌入式 C firmware diff 做只读 audit，寻找可达的 ISR/DMA race，只输出证据和修复建议。",
+      "expected": [
+        "embedded-code-review"
+      ],
+      "excluded": [
+        "embedded-code-generator"
+      ]
+    },
+    {
+      "id": "positive-fault-analyzer",
+      "kind": "positive",
+      "prompt": "Cortex-M4 的原始 CFSR/HFSR 和 entry EXC_RETURN 已保存，PSP frame 验证可信，PC/LR/xPSR 及 matching MAP/disassembly 均齐全。严格分析 Fault 机制。",
+      "expected": [
+        "hardfault-analyzer"
+      ],
+      "excluded": [
+        "hardfault-triage"
+      ]
+    },
+    {
+      "id": "positive-fact-check",
+      "kind": "positive",
+      "prompt": "核验这份嵌入式设计文档提到的 API、path、enum、数量和机制假设是否与代码一致。本机没有 logicprobe。",
+      "expected": [
+        "fact-check"
+      ],
+      "excluded": [
+        "embedded-code-review"
+      ]
+    },
+    {
+      "id": "positive-state-machine",
+      "kind": "positive",
+      "prompt": "检查嵌入式协议 ACK/NACK、transition、timeout、retry、recovery 和 fault gating 是否会留下 stuck state。只分析状态模型。",
+      "expected": [
+        "state-machine-design"
+      ],
+      "excluded": [
+        "embedded-code-generator"
+      ]
+    },
+    {
+      "id": "negative-rtos-teaching",
+      "kind": "negative",
+      "prompt": "用通俗语言解释 FreeRTOS Queue 和 Task Notification 的区别，没有故障，也不需要设计或写模块。",
+      "expected": [],
+      "excluded": [
+        "freertos-debug",
+        "embedded-code-generator",
+        "embedded-firmware-dev"
+      ]
+    },
+    {
+      "id": "negative-fault-from-name",
+      "kind": "negative",
+      "prompt": "我只知道 Cortex-M 程序进入 HardFault，尚未采集原始寄存器或异常栈，指导下一步。",
+      "expected": [
+        "hardfault-triage"
+      ],
+      "excluded": [
+        "hardfault-analyzer"
+      ]
+    },
+    {
+      "id": "negative-generator-explanation",
+      "kind": "negative",
+      "prompt": "解释一下这个嵌入式函数里 borrowed pointer 的 lifetime 和 volatile 语义，不修改。",
+      "expected": [
+        "c-cpp-dev"
+      ],
+      "excluded": [
+        "embedded-code-generator"
+      ]
+    },
+    {
+      "id": "negative-investigator-localized",
+      "kind": "negative",
+      "prompt": "已定位到 FreeRTOS 两个 mutex 构成同时等待的 deadlock，分析调度和锁持有路径。",
+      "expected": [
+        "freertos-debug"
+      ],
+      "excluded": [
+        "embedded-bug-investigator"
+      ]
+    },
+    {
+      "id": "negative-makefile",
+      "kind": "negative",
+      "prompt": "帮我检查 GCC-only STM32 Makefile 的构建参数，没有 Keil、UV4、AC5 或 AC6。",
+      "expected": [],
+      "excluded": [
+        "keil-mdk-build"
+      ]
+    },
+    {
+      "id": "negative-datasheet-debug",
+      "kind": "negative",
+      "prompt": "STM32 SPI IRQ 已触发但 HAL completion callback 不执行，请定位 handler 到 callback 的代码路径。",
+      "expected": [
+        "stm32-driver-debug"
+      ],
+      "excluded": [
+        "datasheet-reader"
+      ]
+    },
+    {
+      "id": "negative-memory-unknown-hang",
+      "kind": "negative",
+      "prompt": "设备偶发卡死，尚无 ELF、MAP 或 runtime memory measurements，不知道是不是 RAM、UART 或调度问题。先定位故障域。",
+      "expected": [
+        "embedded-bug-investigator"
+      ],
+      "excluded": [
+        "firmware-memory-analyzer"
+      ]
+    },
+    {
+      "id": "negative-desktop",
+      "kind": "negative",
+      "prompt": "Review this desktop/server C++ application for a function lifetime issue. It is not embedded firmware.",
+      "expected": [],
+      "excluded": [
+        "embedded-workbench",
+        "embedded-code-review",
+        "c-cpp-dev",
+        "embedded-code-generator"
+      ]
+    },
+    {
+      "id": "negative-format",
+      "kind": "negative",
+      "prompt": "只调整这个嵌入式 C 文件的缩进和空格，使用现有 formatter。",
+      "expected": [],
+      "excluded": [
+        "embedded-workbench",
+        "c-cpp-dev",
+        "embedded-code-generator",
+        "embedded-code-review"
+      ]
+    }
+  ]
+}

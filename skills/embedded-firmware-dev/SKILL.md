@@ -1,13 +1,17 @@
 ---
 name: embedded-firmware-dev
-description: "Use when writing or reviewing embedded C firmware, FreeRTOS tasks, ISR handlers, NVM/flash storage, or sensor driver state machines. NOT for documentation-only RTOS references, conceptual RTOS discussions, or bare-metal projects without an RTOS or sensor subsystem."
+description: "Use when designing embedded firmware contracts for FreeRTOS usage, ISR handoff, NVM, sensor lifecycle, async cleanup or LVGL. Integrated code implementation uses embedded-code-generator; deep RTOS scheduling/synchronization failure analysis uses freertos-debug; explicit read-only audits use embedded-code-review."
 ---
 
 <HARD-GATE>
-This is a domain implementation skill. If you are planning, designing, or entering plan mode — load `Skill("embedded-workbench")` first to activate the workflow gates (Plan Verification Gate, Approval Gate, Closure Gate). Domain skills carry implementation guidance, not workflow enforcement.
+This is a domain implementation skill. If you are planning, designing, or entering plan mode — load `Skill("embedded-workbench")` once to activate the workflow gates (Plan Verification Gate, Approval Gate, Closure Gate), or reuse it if already loaded. Do not recursively reload the coordinator. Domain skills carry implementation guidance, not workflow enforcement.
 </HARD-GATE>
 
 # Embedded Firmware Development
+
+## Routing boundary
+
+Use for general firmware design and implementation rules, including Queue + Task Notification module design. Requested code implementation starts with `embedded-code-generator`, adding these rules only when needed. Do not lead deep FreeRTOS scheduling/synchronization fault forensics: use `freertos-debug`. Ordinary API teaching alone does not require this skill.
 
 ## FreeRTOS
 
@@ -78,12 +82,12 @@ void comm_handler(void) {
 
 ## One-Shot Event Consumption
 
-- When a low-level driver produces a transient event that multiple higher-level consumers need, use an atomic check-and-clear (consume) API rather than shared flags each consumer clears manually.
+- For a transient event consumed by one owner, use an atomic check-and-clear (consume) API rather than unsynchronized manual clearing.
 - Manual clearing by multiple consumers creates races: consumer A clears before B reads, or B reads a flag already set again by the next cycle.
-- The consume primitive returns whether the event occurred and atomically clears the latch — every interested consumer observes the event exactly once per occurrence.
+- The consume primitive clears the shared latch: only the first consumer of a given bit sees it. Multiple occurrences can coalesce. Broadcast requires independent per-consumer state; this example does not provide it.
 
 ```c
-// Atomic check-and-clear: every consumer sees the event exactly once
+// Atomic check-and-clear for one owner; repeated events can coalesce
 static volatile uint32_t event_latch;
 
 uint32_t event_consume(uint32_t mask) {
@@ -95,7 +99,7 @@ uint32_t event_consume(uint32_t mask) {
     return pending;                     // Non-zero = event occurred this cycle
 }
 
-// Each consumer independently observes — no races between consumers
+// Alternative owners, not two broadcast subscribers: the first clears the bit
 void ui_consume(void) {
     if (event_consume(EVT_SENSOR_READY)) update_display();
 }
@@ -130,4 +134,4 @@ This skill's `references/` directory contains in-depth material. Load when you n
 | `embedded-patterns.md` | GIF timer safety, async lifecycle, state latches | Debugging timer crashes, stale flags, or state corruption |
 | `lvgl-pitfalls.md` | LVGL layout, alignment, alpha, and mask traps | Debugging LVGL rendering artifacts or HardFault in draw paths |
 
-See also: `Skill("state-machine-design")` for state transition rules, `Skill("debug-methodology")` for debugging process, `Skill("hardfault-triage")` for stack overflow and ISR crash triage.
+See also: `Skill("state-machine-design")` for a missing transition contract, `Skill("freertos-debug")` for established scheduling/synchronization failure, and `Skill("hardfault-triage")` for an exception needing capture. Add only the specialist needed by the evidence.

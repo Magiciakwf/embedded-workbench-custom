@@ -4,3 +4,4 @@
 *.md text=auto
 *.json text=auto
 hooks/session-start text eol=lf
+hooks/session-start-content.md text eol=lf

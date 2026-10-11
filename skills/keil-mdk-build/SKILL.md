@@ -1,13 +1,17 @@
 ---
 name: keil-mdk-build
-description: "Use when building, flashing, or packaging firmware with Keil MDK (UV4 CLI, ARMCLANG), analyzing .map files for ROM/RAM optimization and memory budget, or diagnosing Keil-specific build failures. NOT for non-Keil build systems (Makefile, CMake, IAR, GCC-only). For crash triage see hardfault-triage."
+description: "Use when building, flashing or packaging with Keil UV4, AC5/armcc, AC6/Armclang, diagnosing toolchain compile/link errors or Keil-specific migration. Pure ELF/MAP/Flash/RAM/section analysis uses firmware-memory-analyzer. Not non-Keil build systems or fault diagnosis."
 ---
 
 <HARD-GATE>
-This is a domain implementation skill. If you are planning, designing, or entering plan mode — load `Skill("embedded-workbench")` first to activate the workflow gates (Plan Verification Gate, Approval Gate, Closure Gate). Domain skills carry implementation guidance, not workflow enforcement.
+This is a domain implementation skill. If you are planning, designing, or entering plan mode — load `Skill("embedded-workbench")` once to activate the workflow gates (Plan Verification Gate, Approval Gate, Closure Gate), or reuse it if already loaded. Do not recursively reload the coordinator. Domain skills carry implementation guidance, not workflow enforcement.
 </HARD-GATE>
 
 # Keil MDK Build
+
+## Routing boundary
+
+Use for a concrete Keil toolchain task. Pure ELF/MAP/linker placement, Flash/RAM, stack/heap and size attribution starts with `firmware-memory-analyzer`, even when Keil produced the artifacts. The MAP notes below are supporting toolchain context, not a competing memory-analysis entry point.
 
 Patterns for building embedded firmware with Keil MDK. Covers both ARM Compiler 5 (armcc) and ARM Compiler 6 (armclang).
 
