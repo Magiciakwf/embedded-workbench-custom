@@ -26,6 +26,7 @@
       ".dsh/INSTALL.md",
       "RELEASE.md",
       "scripts/bump-version.mjs",
+      "tests/skill-triggering/evidence",
       "node_modules",
       ".git",
       ".mypy_cache"

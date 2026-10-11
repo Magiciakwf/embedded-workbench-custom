@@ -118,7 +118,7 @@ function walk(dir, rel, skipDirs, out) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const relPath = rel ? `${rel}/${entry.name}` : entry.name;
     if (entry.isDirectory()) {
-      if (skipDirs.has(entry.name) || skipDirs.has(relPath)) continue;
+      if (skipDirs.has(entry.name) || skipDirs.has(relPath) || skipDirs.has(path.normalize(relPath))) continue;
       walk(path.join(dir, entry.name), relPath, skipDirs, out);
     } else if (entry.isFile()) {
       out.push({ abs: path.join(dir, entry.name), rel: relPath });
@@ -132,7 +132,10 @@ function cmdAudit(config) {
   const declaredPaths = new Set([...declared(config).map((d) => d.path), ...declaredText(config)]);
   const current = config.version;
   const excludes = config.audit?.exclude || [];
-  const skipDirs = new Set(['.git', 'node_modules']);
+  const configuredDirs = excludes.filter((entry) => {
+    try { return fs.statSync(path.join(ROOT, entry)).isDirectory(); } catch { return false; }
+  });
+  const skipDirs = new Set(['.git', 'node_modules', ...configuredDirs.map((entry) => path.normalize(entry))]);
   const exclNames = new Set(excludes.map((e) => path.basename(e)));
   const exclPaths = new Set(excludes.map((e) => path.normalize(e)));
 
