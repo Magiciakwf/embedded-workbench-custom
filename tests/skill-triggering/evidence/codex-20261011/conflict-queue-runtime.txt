@@ -1,0 +1,7 @@
+case: conflict-queue-runtime
+thread: 01a12aca-c8b8-7e41-9531-c067666cf763
+observed: freertos-debug
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\freertos-debug\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-queue-runtime.jsonl
+completed: true
+final: freertos-debug — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\freertos-debug\SKILL.md`

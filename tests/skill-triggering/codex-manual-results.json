@@ -2,10 +2,10 @@
   "schema_version": 1,
   "platform": "codex",
   "validation_mode": "manual-native-skill-routing",
-  "status": "not_run",
-  "reason": "This session uses the installed upstream catalog and user skills, not the development checkout. A clean session with only the development plugin catalog is required; no native invocation results are asserted.",
-  "source_revision": null,
-  "session": null,
+  "status": "completed",
+  "reason": "31 independent ephemeral Codex CLI sessions completed; observations come from actual custom-cache SKILL.md reads (or explicit NONE for no-skill cases).",
+  "source_revision": "c81d3d72b1c8022a7e9abdd407097c691782bf03",
+  "session": "Codex CLI 0.160.1, 31 independent ephemeral sessions, 2026-10-11",
   "results": [
     {
       "id": "conflict-unknown-hang",
@@ -18,9 +18,11 @@
         "stm32-driver-debug",
         "debug-methodology"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-bug-investigator"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-unknown-hang.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-notification-after-irq",
@@ -33,9 +35,11 @@
         "stm32-driver-debug",
         "embedded-firmware-dev"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "freertos-debug"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-notification-after-irq.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-fault-no-evidence",
@@ -47,9 +51,11 @@
         "hardfault-analyzer",
         "debug-methodology"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "hardfault-triage"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-fault-no-evidence.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-fault-complete-evidence",
@@ -60,9 +66,11 @@
       "excluded": [
         "hardfault-triage"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "hardfault-analyzer"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-fault-complete-evidence.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-queue-design",
@@ -74,9 +82,11 @@
         "freertos-debug",
         "embedded-code-generator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-firmware-dev"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-queue-design.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-queue-runtime",
@@ -88,9 +98,11 @@
         "embedded-firmware-dev",
         "embedded-bug-investigator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "freertos-debug"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-queue-runtime.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-keil-argument",
@@ -101,9 +113,11 @@
       "excluded": [
         "firmware-memory-analyzer"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "keil-mdk-build"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-keil-argument.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-ram-attribution",
@@ -114,9 +128,11 @@
       "excluded": [
         "keil-mdk-build"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "firmware-memory-analyzer"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-ram-attribution.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-local-ownership",
@@ -128,9 +144,11 @@
         "embedded-code-generator",
         "embedded-code-review"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "c-cpp-dev"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-local-ownership.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-new-uart-module",
@@ -143,9 +161,11 @@
         "stm32-driver-debug",
         "embedded-code-review"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-code-generator"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-new-uart-module.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-review-only",
@@ -157,9 +177,11 @@
         "embedded-code-generator",
         "stm32-driver-debug"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-code-review"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-review-only.txt",
+      "status": "pass"
     },
     {
       "id": "conflict-repair-followup",
@@ -170,9 +192,11 @@
       "excluded": [
         "embedded-code-review"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-code-generator"
+      ],
+      "evidence": "evidence/codex-20261011/conflict-repair-followup.txt",
+      "status": "pass"
     },
     {
       "id": "positive-localized-methodology",
@@ -183,9 +207,11 @@
       "excluded": [
         "embedded-bug-investigator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "debug-methodology"
+      ],
+      "evidence": "evidence/codex-20261011/positive-localized-methodology.txt",
+      "status": "pass"
     },
     {
       "id": "positive-stm32-path",
@@ -196,9 +222,11 @@
       "excluded": [
         "freertos-debug"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "stm32-driver-debug"
+      ],
+      "evidence": "evidence/codex-20261011/positive-stm32-path.txt",
+      "status": "pass"
     },
     {
       "id": "positive-datasheet",
@@ -210,9 +238,11 @@
         "stm32-driver-debug",
         "embedded-bug-investigator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "datasheet-reader"
+      ],
+      "evidence": "evidence/codex-20261011/positive-datasheet.txt",
+      "status": "pass"
     },
     {
       "id": "positive-memory",
@@ -223,9 +253,11 @@
       "excluded": [
         "keil-mdk-build"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "firmware-memory-analyzer"
+      ],
+      "evidence": "evidence/codex-20261011/positive-memory.txt",
+      "status": "pass"
     },
     {
       "id": "positive-investigator",
@@ -237,9 +269,11 @@
         "hardfault-triage",
         "freertos-debug"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-bug-investigator"
+      ],
+      "evidence": "evidence/codex-20261011/positive-investigator.txt",
+      "status": "pass"
     },
     {
       "id": "positive-generator-design-implementation",
@@ -250,9 +284,11 @@
       "excluded": [
         "freertos-debug"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-code-generator"
+      ],
+      "evidence": "evidence/codex-20261011/positive-generator-design-implementation.txt",
+      "status": "pass"
     },
     {
       "id": "positive-review-audit",
@@ -263,9 +299,11 @@
       "excluded": [
         "embedded-code-generator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-code-review"
+      ],
+      "evidence": "evidence/codex-20261011/positive-review-audit.txt",
+      "status": "pass"
     },
     {
       "id": "positive-fault-analyzer",
@@ -276,9 +314,11 @@
       "excluded": [
         "hardfault-triage"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "hardfault-analyzer"
+      ],
+      "evidence": "evidence/codex-20261011/positive-fault-analyzer.txt",
+      "status": "pass"
     },
     {
       "id": "positive-fact-check",
@@ -289,9 +329,11 @@
       "excluded": [
         "embedded-code-review"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "fact-check"
+      ],
+      "evidence": "evidence/codex-20261011/positive-fact-check.txt",
+      "status": "pass"
     },
     {
       "id": "positive-state-machine",
@@ -302,9 +344,11 @@
       "excluded": [
         "embedded-code-generator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "state-machine-design"
+      ],
+      "evidence": "evidence/codex-20261011/positive-state-machine.txt",
+      "status": "pass"
     },
     {
       "id": "negative-rtos-teaching",
@@ -315,9 +359,9 @@
         "embedded-code-generator",
         "embedded-firmware-dev"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [],
+      "evidence": "evidence/codex-20261011/negative-rtos-teaching.txt",
+      "status": "pass"
     },
     {
       "id": "negative-fault-from-name",
@@ -328,9 +372,11 @@
       "excluded": [
         "hardfault-analyzer"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "hardfault-triage"
+      ],
+      "evidence": "evidence/codex-20261011/negative-fault-from-name.txt",
+      "status": "pass"
     },
     {
       "id": "negative-generator-explanation",
@@ -341,9 +387,11 @@
       "excluded": [
         "embedded-code-generator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "c-cpp-dev"
+      ],
+      "evidence": "evidence/codex-20261011/negative-generator-explanation.txt",
+      "status": "pass"
     },
     {
       "id": "negative-investigator-localized",
@@ -354,9 +402,11 @@
       "excluded": [
         "embedded-bug-investigator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "freertos-debug"
+      ],
+      "evidence": "evidence/codex-20261011/negative-investigator-localized.txt",
+      "status": "pass"
     },
     {
       "id": "negative-makefile",
@@ -365,9 +415,9 @@
       "excluded": [
         "keil-mdk-build"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [],
+      "evidence": "evidence/codex-20261011/negative-makefile.txt",
+      "status": "pass"
     },
     {
       "id": "negative-datasheet-debug",
@@ -378,9 +428,11 @@
       "excluded": [
         "datasheet-reader"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "stm32-driver-debug"
+      ],
+      "evidence": "evidence/codex-20261011/negative-datasheet-debug.txt",
+      "status": "pass"
     },
     {
       "id": "negative-memory-unknown-hang",
@@ -391,9 +443,11 @@
       "excluded": [
         "firmware-memory-analyzer"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [
+        "embedded-bug-investigator"
+      ],
+      "evidence": "evidence/codex-20261011/negative-memory-unknown-hang.txt",
+      "status": "pass"
     },
     {
       "id": "negative-desktop",
@@ -405,9 +459,9 @@
         "c-cpp-dev",
         "embedded-code-generator"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [],
+      "evidence": "evidence/codex-20261011/negative-desktop.txt",
+      "status": "pass"
     },
     {
       "id": "negative-format",
@@ -419,9 +473,9 @@
         "embedded-code-generator",
         "embedded-code-review"
       ],
-      "observed": null,
-      "evidence": null,
-      "status": "not_run"
+      "observed": [],
+      "evidence": "evidence/codex-20261011/negative-format.txt",
+      "status": "pass"
     }
   ]
 }

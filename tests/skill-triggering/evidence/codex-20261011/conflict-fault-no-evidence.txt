@@ -1,0 +1,7 @@
+case: conflict-fault-no-evidence
+thread: 01a12aca-2474-7091-b13c-155a1c088aac
+observed: hardfault-triage
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\hardfault-triage\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-fault-no-evidence.jsonl
+completed: true
+final: hardfault-triage   `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\hardfault-triage\SKILL.md`

@@ -1,0 +1,7 @@
+case: positive-datasheet
+thread: 01a12acc-2220-71f0-8585-9701aeb25e86
+observed: datasheet-reader
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\datasheet-reader\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\positive-datasheet.jsonl
+completed: true
+final: embedded-workbench-custom:datasheet-reader   `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\datasheet-reader\SKILL.md`

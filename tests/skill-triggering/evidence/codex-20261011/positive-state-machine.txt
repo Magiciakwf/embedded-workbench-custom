@@ -1,0 +1,7 @@
+case: positive-state-machine
+thread: 01a12acd-a36d-7f52-ba95-1fb3da0bbb5a
+observed: state-machine-design
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\state-machine-design\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\positive-state-machine.jsonl
+completed: true
+final: state-machine-design — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\state-machine-design\SKILL.md`

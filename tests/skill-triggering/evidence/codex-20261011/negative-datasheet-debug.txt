@@ -1,0 +1,7 @@
+case: negative-datasheet-debug
+thread: 01a12ace-7bd0-7d02-958b-cb0a68064e3e
+observed: stm32-driver-debug
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\stm32-driver-debug\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\negative-datasheet-debug.jsonl
+completed: true
+final: stm32-driver-debug — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\stm32-driver-debug\SKILL.md`

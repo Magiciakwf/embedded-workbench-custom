@@ -1,0 +1,7 @@
+case: conflict-local-ownership
+thread: 01a12acb-3918-7f50-b8f2-0231cdb2b59f
+observed: c-cpp-dev
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\c-cpp-dev\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-local-ownership.jsonl
+completed: true
+final: embedded-workbench-custom:c-cpp-dev — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\c-cpp-dev\SKILL.md`

@@ -1,0 +1,7 @@
+case: negative-rtos-teaching
+thread: 01a12acd-a727-74c1-961a-2a6924ec8972
+observed: NONE
+source: no specialist SKILL.md read
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\negative-rtos-teaching.jsonl
+completed: true
+final: NONE

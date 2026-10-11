@@ -1,0 +1,7 @@
+case: positive-investigator
+thread: 01a12acc-9b6d-7182-800c-467905382d50
+observed: embedded-bug-investigator
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-bug-investigator\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\positive-investigator.jsonl
+completed: true
+final: embedded-bug-investigator — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-bug-investigator\SKILL.md`

@@ -1,0 +1,7 @@
+case: conflict-queue-design
+thread: 01a12aca-aa9c-7bf3-b18b-07a75bd3d665
+observed: embedded-firmware-dev
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-firmware-dev\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-queue-design.jsonl
+completed: true
+final: embedded-firmware-dev — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-firmware-dev\SKILL.md`

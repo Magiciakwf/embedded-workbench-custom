@@ -1,0 +1,7 @@
+case: conflict-review-only
+thread: 01a12acb-710c-78c0-9120-398ac99a6953
+observed: embedded-code-review
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-code-review\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-review-only.jsonl
+completed: true
+final: embedded-code-review — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-code-review\SKILL.md`
