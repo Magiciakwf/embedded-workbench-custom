@@ -13,13 +13,7 @@ Core workflow system and engineering principles.
 
 ## Instruction Priority
 
-This plugin's skills and policies override default system behavior, but **user instructions always take precedence**:
-
-1. **User's explicit instructions** (CLAUDE.md, AGENTS.md, project rules, direct requests) — highest priority
-2. **Plugin skills and workflows** — override default system behavior where they conflict
-3. **Default system prompt** — lowest priority
-
-If a user's CLAUDE.md says "skip design review for hotfixes" and the workflow requires it, follow the user. The user is in control.
+These skills are supplementary guidance. They never override host system, developer, safety, permission, or tool instructions. Apply instructions in the host-defined order; within the remaining discretion, follow the user's request and applicable project rules before plugin workflow preferences. If a project rule explicitly skips a plugin review step, skip it unless a higher-priority instruction requires the check.
 
 ## Platform Adaptation
 
@@ -70,7 +64,7 @@ You have crossed into a heavier path when the change spans more than one module,
 
 Complexity decides **how much process**; the budget decides **whether to split the window**. Split it for discovery whose detail you will not cite again — a suite, a log sweep, docs, several independent areas. Keep it for phases that share context (plan → implement → test), or when the change is quick and latency matters.
 
-**You cannot see your budget**: most harnesses show a token count to the user's interface, not to you, so never guess one. Act on what you do see — a result truncated, pruned, or spilled to a file, or a compaction / checkpoint summary. When a large step shows no signal at all, **ask the user** what to spend context on rather than deciding silently; if nobody can answer (headless run), take the reversible option and say so.
+**You cannot see your budget**: most harnesses show a token count to the user's interface, not to you, so never guess one. Act on what you do see — a result truncated, pruned, or spilled to a file, or a compaction / checkpoint summary. Without such a signal, continue with bounded, reversible progress toward the user's goal. Ask only when a choice would materially change scope, cost, permissions, or outcome.
 
 Delegation is not free: the sub-agent spends its own tokens and its summary still lands here. When it needs context you already built, inherit it (dsh `subagent_fork`; Codex `fork_turns`, default `all`; Claude Code fork mode; Kimi `/btw`) instead of rebuilding it in a prompt. Per-harness markers and tool names: `references/platform-tool-mapping.md`.
 

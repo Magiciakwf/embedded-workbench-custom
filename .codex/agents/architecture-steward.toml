@@ -1,7 +1,5 @@
 name = "architecture-steward"
 description = "Architecture planning, design packages, work breakdown, module ownership, state models, recovery paths, cross-module coordination. Use for multi-module design, new feature architecture, or state-machine planning."
-model = "gpt-5.4"
-model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
 [instructions]

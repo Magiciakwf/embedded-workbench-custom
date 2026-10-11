@@ -1,8 +1,10 @@
-# 嵌入式工作台
+# Embedded Workbench Custom
 
 <p align="center"><a href="README.en-US.md">English</a> · <strong>中文</strong></p>
 
-嵌入式 C/C++ 固件开发工具箱：4 个代理、8 个技能，覆盖 FreeRTOS、中断、NVM 存储、Keil MDK（AC5/AC6）、ARMCLANG、HardFault 分析、状态机、架构原则与 LVGL 陷阱。
+STM32 / FreeRTOS / 嵌入式固件开发、调试、分析与代码审查工具箱：4 个 Codex 代理、16 个技能。
+
+本项目基于 Amethyst Luna 的 [embedded-workbench](https://github.com/AmethystLuna/embedded-workbench) v0.9.2，保留原 MIT 许可证与版权归属，并加入 8 个专项技能、独立插件身份和可恢复的 Windows 安装链路。
 
 **跨平台**：支持 Claude Code、Codex CLI、Cursor、Kimi CLI、OpenCode、ZCode、DeepSeek Harness (dsh)。基于 [Agent Skills](https://agentskills.io) 开放标准构建。
 
@@ -17,7 +19,7 @@
 | `execution-worker` | 计划 → 审批 → 实施循环，含编译验证 |
 | `quality-coordinator` | 实现审查：Bug 发现、合规检查、结束完整性 |
 
-### 技能 (8)
+### 技能 (16)
 
 | 技能 | 说明 |
 | ------ | ------ |
@@ -29,6 +31,14 @@
 | `state-machine-design` | 状态模型、重试、超时、转换门控、实现模式 |
 | `hardfault-triage` | 处理器异常分类：故障寄存器、栈帧、PC 定位源码、根因分类 |
 | `fact-check` | 声称核查回退：逐条对照代码库核实 API 名、文件路径、枚举值、数量与机制可行性。logicprobe 未安装时由 Plan Verification Gate 使用 |
+| `embedded-code-review` | 只读审查嵌入式 C/C++ 的可达正确性、并发、ISR、DMA、时序与存储问题 |
+| `stm32-driver-debug` | 从时钟、引脚、寄存器、HAL/LL 状态、IRQ/DMA 与波形定位 STM32 外设问题 |
+| `freertos-debug` | 定位 FreeRTOS 调度、同步、事件丢失、时序、栈/堆与 ISR 集成问题 |
+| `hardfault-analyzer` | 使用完整寄存器、异常栈和匹配 ELF/MAP 深入分析 Cortex-M fault |
+| `datasheet-reader` | 从精确器件资料核对寄存器、时序、电气、初始化与勘误 |
+| `firmware-memory-analyzer` | 分析 ELF/MAP/链接脚本与实测数据中的 Flash/RAM、栈和堆 |
+| `embedded-bug-investigator` | 对未知域的复位、卡死、损坏和偶发问题进行假设驱动定位 |
+| `embedded-code-generator` | 在现有工程中实现并集成驱动、协议、状态机、缓冲区和 RTOS 模块 |
 
 `logicprobe`（文档与计划声称核查技能）**已拆分为独立插件**，见下方[其他插件推荐](#其他插件推荐)。未安装时，Plan Verification Gate 回退到本插件自带的 `fact-check` 技能。只有行为与模型类声称会降级为人工确认。
 
@@ -40,6 +50,16 @@
 
 ## 安装
 
+### Windows Codex（推荐）
+
+```powershell
+git clone --branch 0.9.3-custom.1 https://github.com/Magiciakwf/embedded-workbench-custom.git
+Set-Location embedded-workbench-custom
+& .\scripts\install-windows.ps1
+```
+
+脚本会备份现有配置和 8 个同名用户级 Skill，安装并验证自定义插件，随后可用 `scripts\restore-previous.ps1` 一键恢复。完整说明见 [INSTALL-WINDOWS.md](INSTALL-WINDOWS.md)。
+
 ### Claude Code 安装（推荐）
 
 在 **Claude Code** 的 `~/.claude/settings.json` 中添加 marketplace：
@@ -47,8 +67,8 @@
 ```json
 {
   "extraKnownMarketplaces": {
-    "embedded-workbench": {
-      "source": { "source": "github", "repo": "AmethystLuna/embedded-workbench" }
+    "embedded-workbench-custom": {
+      "source": { "source": "github", "repo": "Magiciakwf/embedded-workbench-custom" }
     }
   }
 }
@@ -57,13 +77,13 @@
 然后通过 CLI 安装：
 
 ```bash
-claude plugin install embedded-workbench@embedded-workbench
+claude plugin install embedded-workbench-custom@embedded-workbench-custom
 ```
 
 ### Claude Code 手动安装
 
 ```bash
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.claude/plugins/dev/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.claude/plugins/dev/embedded-workbench-custom
 ```
 
 然后在 `~/.claude/settings.json` 中启用：
@@ -71,7 +91,7 @@ git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.claude/plugi
 ```json
 {
   "enabledPlugins": {
-    "embedded-workbench@dev": true
+    "embedded-workbench-custom@dev": true
   }
 }
 ```
@@ -92,7 +112,7 @@ git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.claude/plugi
 # 从 npm 安装（包名 dsh-embedded-workbench）
 dsh plugin --profile web add dsh-embedded-workbench
 # 或从 GitHub 源码安装
-dsh plugin --profile web add "github:AmethystLuna/embedded-workbench"
+dsh plugin --profile web add "github:Magiciakwf/embedded-workbench-custom"
 # 未全局安装 dsh 时可用 npx
 npx -p @deepseek-ai/dsh dsh plugin --profile web add dsh-embedded-workbench
 ```
@@ -136,17 +156,17 @@ npx -p @deepseek-ai/dsh dsh plugin --profile web add dsh-embedded-workbench
 ### Codex 安装
 
 ```bash
-# 添加 marketplace
-codex plugin marketplace add AmethystLuna/embedded-workbench
+# 添加稳定版 marketplace
+codex plugin marketplace add Magiciakwf/embedded-workbench-custom --ref 0.9.3-custom.1
 
 # 安装
-codex plugin install embedded-workbench
+codex plugin add embedded-workbench-custom@embedded-workbench-custom
 ```
 
 或手动安装：
 
 ```bash
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.codex/plugins/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.codex/plugins/embedded-workbench-custom
 ```
 
 技能通过 `$skill-name` 调用（如 `$debug-methodology`），或由 Codex 根据任务上下文自动匹配。
@@ -159,10 +179,10 @@ Cursor 2.5+ 内置插件支持。`agents/` 中的代理自动发现。
 
 ```bash
 # 克隆到 Cursor 插件目录
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.cursor/plugins/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.cursor/plugins/embedded-workbench-custom
 ```
 
-或通过 Cursor 插件市场 UI 安装：`/add-plugin AmethystLuna/embedded-workbench`
+或通过 Cursor 插件市场 UI 安装：`/add-plugin Magiciakwf/embedded-workbench-custom`
 
 ## Kimi CLI
 
@@ -172,10 +192,10 @@ Kimi CLI 自动从 `.claude/skills/` 等标准路径发现技能。`.kimi-plugin
 
 ```bash
 # 通过 Kimi 插件管理器
-/plugins install https://github.com/AmethystLuna/embedded-workbench.git
+/plugins install https://github.com/Magiciakwf/embedded-workbench-custom.git
 
 # 或手动克隆
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.kimi/plugins/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.kimi/plugins/embedded-workbench-custom
 ```
 
 技能通过 `/skill:<name>` 调用（如 `/skill:debug-methodology`）。
@@ -186,7 +206,7 @@ git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.kimi/plugins
 
 ```json
 {
-  "plugin": ["embedded-workbench@git+https://github.com/AmethystLuna/embedded-workbench.git"]
+  "plugin": ["embedded-workbench-custom@git+https://github.com/Magiciakwf/embedded-workbench-custom.git"]
 }
 ```
 
@@ -197,7 +217,7 @@ git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.kimi/plugins
 ZCode 3.0+ 遵循 Agent Skills 标准。它没有插件商店，手动复制技能到 `.zcode/skills/`：
 
 ```bash
-git clone https://github.com/AmethystLuna/embedded-workbench.git
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git
 cp -r embedded-workbench/skills/* .zcode/skills/
 ```
 
@@ -207,7 +227,7 @@ cp -r embedded-workbench/skills/* .zcode/skills/
 
 - 宿主：Claude Code v2.1+ / Codex CLI 最新版 / Cursor 2.5+ / Kimi CLI 最新版 / OpenCode 最新版 / ZCode 3.0+
 - DeepSeek Harness (dsh)：dev preview，声明支持 `>= 0.1.0-rc.7`。最新一轮在 0.2.1-alpha.1 上实测了安装、挂载、启动与卸载；更早一轮实测覆盖 0.1.5-rc.2 到 0.2.0-rc.2。逐版本证据见 [DSH-COMPATIBILITY.md](DSH-COMPATIBILITY.md)。
-- Web 端的「Gate 注入」开关需要 **dsh ≥ 0.1.7-alpha.1**，因为设置服务必须能投影即时字段。更早的 dsh 上插件与 8 个技能照常加载、照常注入，只是开关不出现，也不报错。
+- Web 端的「Gate 注入」开关需要 **dsh ≥ 0.1.7-alpha.1**，因为设置服务必须能投影即时字段。更早的 dsh 上插件与 16 个技能照常加载、照常注入，只是开关不出现，也不报错。
 - 无外部依赖。
 
 ## 配置
@@ -219,7 +239,7 @@ cp -r embedded-workbench/skills/* .zcode/skills/
 | `enabled` | boolean | `true` | 设为 `false` 可完全关闭首步 Gate 注入；技能注册不受影响。 |
 | `gateContent` | string | 内置 gate 文本 | 覆盖注入到首轮模型上下文中的文本。 |
 
-在 dsh Web GUI 里可以直接改这个开关：侧边栏 **插件** → 本插件卡片 → 「Gate 注入」。它实时生效，不必重启 profile。它只管注入的那段文本：关掉后 8 个技能照常注册。同一张卡片上还有一个更粗粒度的行开关，关掉它会整行卸载插件，技能和这个开关一起消失。要持久化覆盖，仍按下面的 profile patch 写。
+在 dsh Web GUI 里可以直接改这个开关：侧边栏 **插件** → 本插件卡片 → 「Gate 注入」。它实时生效，不必重启 profile。它只管注入的那段文本：关掉后 16 个技能照常注册。同一张卡片上还有一个更粗粒度的行开关，关掉它会整行卸载插件，技能和这个开关一起消失。要持久化覆盖，仍按下面的 profile patch 写。
 
 在 profile 的 `cordis.patch.yml` 中按 row id 覆盖（下面的例子自定义 Gate 文本）：
 
@@ -251,7 +271,7 @@ cp -r embedded-workbench/skills/* .zcode/skills/
 - 技能在 DSH 中不可见：确认 DSH 版本支持 `ctx.skills` 与 Agent Skills 发现，并在安装后重启 profile。
 - Gate 未注入：检查 `enabled` 是否为 `false`，以及 profile patch 中是否存在 `id: embedded-workbench` 的行。
 - 插件管理器拒绝安装：确认 `@deepseek-ai/*` 包声明在 `peerDependencies` 中，而不是 `dependencies`。
-- 手动复制后 DSH 仍看不到技能：改用原生 bundle 安装（`dsh plugin add "github:AmethystLuna/embedded-workbench"`）。
+- 手动复制后 DSH 仍看不到技能：改用源码 bundle 安装（`dsh plugin add "github:Magiciakwf/embedded-workbench-custom"`）。
 
 ## 开发
 

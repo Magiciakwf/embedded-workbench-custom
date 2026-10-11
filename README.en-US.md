@@ -1,10 +1,12 @@
-# Embedded Workbench
+# Embedded Workbench Custom
 
 <p align="center"><strong>English</strong> · <a href="README.md">中文</a></p>
 
 [![HOL Guard Scanner](https://img.shields.io/badge/HOL%20Guard-passing-00a67e)](https://github.com/hashgraph-online/hol-guard)
 
-Embedded C/C++ firmware toolbox: 4 agents and 8 skills covering FreeRTOS, ISR, NVM storage, Keil MDK (AC5/AC6), ARMCLANG, HardFault triage, state machines, architecture principles, and LVGL patterns.
+STM32 / FreeRTOS / Embedded Firmware development, debugging, analysis and code review toolbox with four Codex agents and 16 Skills.
+
+This project is based on Amethyst Luna's [embedded-workbench](https://github.com/AmethystLuna/embedded-workbench) v0.9.2. It preserves the upstream MIT license and attribution while adding eight specialist Skills, an independent plugin identity, and a recoverable Windows installation workflow.
 
 **Cross-platform**: works with Claude Code, Codex CLI, Cursor, Kimi CLI, OpenCode, ZCode, and DeepSeek Harness (dsh). Built on the [Agent Skills](https://agentskills.io) open standard.
 
@@ -19,7 +21,7 @@ Embedded C/C++ firmware toolbox: 4 agents and 8 skills covering FreeRTOS, ISR, N
 | `execution-worker` | Plan → approve → implement cycle with build verification |
 | `quality-coordinator` | Implementation review: bugs, compliance, closure |
 
-### Skills (8)
+### Skills (16)
 
 | Skill | Description |
 | ------- | ------------- |
@@ -31,6 +33,14 @@ Embedded C/C++ firmware toolbox: 4 agents and 8 skills covering FreeRTOS, ISR, N
 | `state-machine-design` | State models, retries, timeouts, transition gates, implementation patterns |
 | `hardfault-triage` | Processor exception triage: fault registers, stack frames, PC-to-source, root-cause classification |
 | `fact-check` | Claim-check fallback: verifies API names, file paths, enum values, counts, and mechanism feasibility against the codebase. Used by the Plan Verification Gate when logicprobe is not installed. |
+| `embedded-code-review` | Read-only evidence-backed embedded C/C++ review across concurrency, ISR, DMA, timing and storage |
+| `stm32-driver-debug` | STM32 peripheral diagnosis using clocks, pins, registers, HAL/LL state, IRQ/DMA paths and waveforms |
+| `freertos-debug` | FreeRTOS scheduling, synchronization, event loss, timing, stack/heap and ISR integration diagnosis |
+| `hardfault-analyzer` | Deep Cortex-M fault analysis from complete registers, exception frame and matching ELF/MAP |
+| `datasheet-reader` | Exact-device register, timing, electrical, initialization and errata lookup |
+| `firmware-memory-analyzer` | Flash/RAM, placement, stack and heap analysis from ELF/MAP/linker artifacts and measurements |
+| `embedded-bug-investigator` | Hypothesis-driven localization of unknown resets, hangs, corruption and intermittent failures |
+| `embedded-code-generator` | Integrated implementation of drivers, protocols, state machines, buffers and RTOS modules |
 
 `logicprobe` (design-doc and plan claim verification) was **split out into its own plugin**. See [Other Plugins Recommended](#other-plugins-recommended). When it is not installed, the Plan Verification Gate falls back to this plugin's built-in `fact-check` skill. Only behavioral and model claims degrade to manual confirmation.
 
@@ -42,6 +52,16 @@ Embedded C/C++ firmware toolbox: 4 agents and 8 skills covering FreeRTOS, ISR, N
 
 ## Installation
 
+### Windows Codex (recommended)
+
+```powershell
+git clone --branch 0.9.3-custom.1 https://github.com/Magiciakwf/embedded-workbench-custom.git
+Set-Location embedded-workbench-custom
+& .\scripts\install-windows.ps1
+```
+
+The script backs up the existing configuration and eight duplicate user Skills, installs and verifies the custom plugin, and supports one-command recovery through `scripts\restore-previous.ps1`. See [INSTALL-WINDOWS.md](INSTALL-WINDOWS.md).
+
 ### Claude Code install (recommended)
 
 Add the marketplace to **Claude Code**'s `~/.claude/settings.json`:
@@ -49,8 +69,8 @@ Add the marketplace to **Claude Code**'s `~/.claude/settings.json`:
 ```json
 {
   "extraKnownMarketplaces": {
-    "embedded-workbench": {
-      "source": { "source": "github", "repo": "AmethystLuna/embedded-workbench" }
+    "embedded-workbench-custom": {
+      "source": { "source": "github", "repo": "Magiciakwf/embedded-workbench-custom" }
     }
   }
 }
@@ -59,13 +79,13 @@ Add the marketplace to **Claude Code**'s `~/.claude/settings.json`:
 Then install from the CLI:
 
 ```bash
-claude plugin install embedded-workbench@embedded-workbench
+claude plugin install embedded-workbench-custom@embedded-workbench-custom
 ```
 
 ### Claude Code manual install
 
 ```bash
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.claude/plugins/dev/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.claude/plugins/dev/embedded-workbench-custom
 ```
 
 Then enable it in `~/.claude/settings.json`:
@@ -73,7 +93,7 @@ Then enable it in `~/.claude/settings.json`:
 ```json
 {
   "enabledPlugins": {
-    "embedded-workbench@dev": true
+    "embedded-workbench-custom@dev": true
   }
 }
 ```
@@ -94,7 +114,7 @@ Install (native bundle, recommended):
 # from npm (package name: dsh-embedded-workbench)
 dsh plugin --profile web add dsh-embedded-workbench
 # or from GitHub source
-dsh plugin --profile web add "github:AmethystLuna/embedded-workbench"
+dsh plugin --profile web add "github:Magiciakwf/embedded-workbench-custom"
 # when dsh is not installed globally
 npx -p @deepseek-ai/dsh dsh plugin --profile web add dsh-embedded-workbench
 ```
@@ -138,17 +158,17 @@ This plugin also supports OpenAI Codex CLI. Skills follow the Agent Skills stand
 ### Codex install
 
 ```bash
-# Add as a marketplace
-codex plugin marketplace add AmethystLuna/embedded-workbench
+# Add the stable marketplace
+codex plugin marketplace add Magiciakwf/embedded-workbench-custom --ref 0.9.3-custom.1
 
 # Install
-codex plugin install embedded-workbench
+codex plugin add embedded-workbench-custom@embedded-workbench-custom
 ```
 
 Or manually:
 
 ```bash
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.codex/plugins/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.codex/plugins/embedded-workbench-custom
 ```
 
 Skills are invoked with `$skill-name` (e.g. `$debug-methodology`), or selected automatically by Codex from the task context.
@@ -161,10 +181,10 @@ Cursor 2.5+ has built-in plugin support. Agents in `agents/` are auto-discovered
 
 ```bash
 # Clone to Cursor plugins directory
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.cursor/plugins/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.cursor/plugins/embedded-workbench-custom
 ```
 
-Or install from the Cursor plugin marketplace UI: `/add-plugin AmethystLuna/embedded-workbench`
+Or install from the Cursor plugin marketplace UI: `/add-plugin Magiciakwf/embedded-workbench-custom`
 
 ## Kimi CLI
 
@@ -174,10 +194,10 @@ Kimi CLI discovers skills from `.claude/skills/` paths automatically. The `.kimi
 
 ```bash
 # Via Kimi plugin manager
-/plugins install https://github.com/AmethystLuna/embedded-workbench.git
+/plugins install https://github.com/Magiciakwf/embedded-workbench-custom.git
 
 # Or clone manually
-git clone https://github.com/AmethystLuna/embedded-workbench.git ~/.kimi/plugins/embedded-workbench
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git ~/.kimi/plugins/embedded-workbench-custom
 ```
 
 Skills are invoked with `/skill:<name>` (e.g. `/skill:debug-methodology`).
@@ -188,7 +208,7 @@ Skills are auto-discovered from `.claude/skills/` and `.codex/skills/` paths. Ad
 
 ```json
 {
-  "plugin": ["embedded-workbench@git+https://github.com/AmethystLuna/embedded-workbench.git"]
+  "plugin": ["embedded-workbench-custom@git+https://github.com/Magiciakwf/embedded-workbench-custom.git"]
 }
 ```
 
@@ -199,7 +219,7 @@ Or install through `skop`, which consumes the Claude marketplace manifest. See `
 ZCode 3.0+ follows the Agent Skills standard. It has no plugin marketplace, so copy the skills yourself:
 
 ```bash
-git clone https://github.com/AmethystLuna/embedded-workbench.git
+git clone https://github.com/Magiciakwf/embedded-workbench-custom.git
 cp -r embedded-workbench/skills/* .zcode/skills/
 ```
 
@@ -209,7 +229,7 @@ Skills are invoked with `$skill-name`. ZCode also auto-discovers from `.claude/s
 
 - Host: Claude Code v2.1+ / Codex CLI latest / Cursor 2.5+ / Kimi CLI latest / OpenCode latest / ZCode 3.0+
 - DeepSeek Harness (dsh): dev preview, declared support for `>= 0.1.0-rc.7`. The latest round measured install, mount, boot and uninstall on 0.2.1-alpha.1. The earlier round measured 0.1.5-rc.2 through 0.2.0-rc.2. Per-release evidence is in [DSH-COMPATIBILITY.md](DSH-COMPATIBILITY.md).
-- The Web Plugins-page "Gate injection" switch requires **dsh ≥ 0.1.7-alpha.1**, because its settings service must be able to project live fields. On older dsh the plugin and its 8 skills still load and still inject. The switch is simply absent, with no error.
+- The Web Plugins-page "Gate injection" switch requires **dsh ≥ 0.1.7-alpha.1**, because its settings service must be able to project live fields. On older dsh the plugin and its 16 skills still load and still inject. The switch is simply absent, with no error.
 - No external dependencies.
 
 ## Configuration
@@ -221,7 +241,7 @@ In DeepSeek Harness the bundle accepts a small configuration object:
 | `enabled` | boolean | `true` | Set to `false` to drop the first-step gate injection entirely. Skill registration is unaffected. |
 | `gateContent` | string | built-in gate text | Override the text injected into the first model step. |
 
-The switch is editable live in the dsh Web GUI: sidebar **Plugins** → this plugin's card → "Gate injection". It takes effect without a profile restart, and it controls only the injected text. Turning it off leaves all eight skills registered. The same card also carries a coarser row switch: turning that one off unmounts the whole row, so the skills and this switch disappear together. Persistent overrides still go through the profile patch below.
+The switch is editable live in the dsh Web GUI: sidebar **Plugins** → this plugin's card → "Gate injection". It takes effect without a profile restart, and it controls only the injected text. Turning it off leaves all 16 skills registered. The same card also carries a coarser row switch: turning that one off unmounts the whole row, so the skills and this switch disappear together. Persistent overrides still go through the profile patch below.
 
 To override the row by id, edit your profile's `cordis.patch.yml`. The example below customises the gate text:
 
@@ -253,7 +273,7 @@ To override the row by id, edit your profile's `cordis.patch.yml`. The example b
 - Skills not visible in DSH: confirm the DSH version supports `ctx.skills` and Agent Skills discovery, then restart the profile.
 - Gate not injected: check that `enabled` is not `false`, and that the row id `embedded-workbench` is present in the active profile patch.
 - Plugin manager rejects the installation: make sure the `@deepseek-ai/*` packages are declared as `peerDependencies`, not as regular `dependencies`.
-- After a manual copy DSH still does not see the skills: install the native bundle instead (`dsh plugin add "github:AmethystLuna/embedded-workbench"`).
+- After a manual copy DSH still does not see the skills: install the source bundle instead (`dsh plugin add "github:Magiciakwf/embedded-workbench-custom"`).
 
 ## Development
 

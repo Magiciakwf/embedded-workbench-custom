@@ -32,6 +32,10 @@ function declared(config) {
   return Object.entries(config.files || {}).map(([p, f]) => ({ path: path.normalize(p), field: f }));
 }
 
+function declaredText(config) {
+  return (config.textFiles || []).map((p) => path.normalize(p));
+}
+
 // resolve "a.b", "a[0].b", 'a["b"].c' against a parsed JSON value
 function resolve(obj, field) {
   const parts = field
@@ -93,6 +97,13 @@ function cmdCheck(config) {
     versions.add(r.version);
     console.log(`  ${p} (${field})  ${r.version}`);
   }
+  for (const p of declaredText(config)) {
+    const full = path.join(ROOT, p);
+    if (!fs.existsSync(full)) { console.log(`  ${p} (text)  MISSING`); bad = true; continue; }
+    const count = fs.readFileSync(full, 'utf8').split(config.version).length - 1;
+    if (!count) { console.log(`  ${p} (text)  version not found`); bad = true; continue; }
+    console.log(`  ${p} (text)  ${config.version} (${count} occurrence${count > 1 ? 's' : ''})`);
+  }
   if (bad) return 1;
   if (versions.size > 1) {
     console.error(`DRIFT: declared versions differ: ${[...versions].join(', ')}`);
@@ -118,7 +129,7 @@ function walk(dir, rel, skipDirs, out) {
 function cmdAudit(config) {
   const checkCode = cmdCheck(config);
   console.log('');
-  const declaredPaths = new Set(declared(config).map((d) => d.path));
+  const declaredPaths = new Set([...declared(config).map((d) => d.path), ...declaredText(config)]);
   const current = config.version;
   const excludes = config.audit?.exclude || [];
   const skipDirs = new Set(['.git', 'node_modules']);
@@ -163,6 +174,15 @@ function cmdBump(config, newVersion) {
     const w = writeVersion(p, oldVersion, newVersion);
     if (!w.ok) { console.log(`  FAIL: ${p} — ${w.reason}`); failures++; continue; }
     console.log(`  ${p}  ${r.version} -> ${newVersion} (${w.count} field${w.count > 1 ? 's' : ''})`);
+  }
+  for (const p of declaredText(config)) {
+    const full = path.join(ROOT, p);
+    if (!fs.existsSync(full)) { console.log(`  FAIL: ${p} — missing text file`); failures++; continue; }
+    const text = fs.readFileSync(full, 'utf8');
+    const count = text.split(oldVersion).length - 1;
+    if (!count) { console.log(`  FAIL: ${p} — no '${oldVersion}' reference found`); failures++; continue; }
+    fs.writeFileSync(full, text.split(oldVersion).join(newVersion));
+    console.log(`  ${p}  ${oldVersion} -> ${newVersion} (${count} text occurrence${count > 1 ? 's' : ''})`);
   }
   syncCompatibilityDoc(oldVersion, newVersion);
   if (failures) fail(`${failures} file(s) failed to update`);

@@ -112,8 +112,10 @@ static void fault_dump_basic(const char *name) {
     printf("MMFAR: 0x%08lX  BFAR: 0x%08lX\n", SCB->MMFAR, SCB->BFAR);
 }
 
-static __attribute__((used)) void HardFault_HandlerC(uint32_t *stacked) {
+static __attribute__((used)) void HardFault_HandlerC(uint32_t *stacked,
+                                                     uint32_t exc_return) {
     fault_dump_basic("HardFault");
+    printf("EXC_RETURN: 0x%08lX\n", exc_return);
     printf("R0: 0x%08lX  R1: 0x%08lX  R2: 0x%08lX  R3: 0x%08lX\n",
            stacked[0], stacked[1], stacked[2], stacked[3]);
     printf("R12: 0x%08lX  LR: 0x%08lX  PC: 0x%08lX  PSR: 0x%08lX\n",
@@ -122,18 +124,16 @@ static __attribute__((used)) void HardFault_HandlerC(uint32_t *stacked) {
 }
 ```
 
-### Naked Handler With Nested-Fault Guard
+### Illustrative Naked Entry Stub
 
 ```c
-// Prevent infinite recursion if the fault handler itself faults (e.g., UART not init'd)
-static volatile uint8_t in_fault = 0;
-
 __attribute__((naked)) void HardFault_Handler(void) {
     __asm volatile(
         "tst lr, #4\n"          // EXC_RETURN bit 2: 0=MSP, 1=PSP
         "ite eq\n"
         "mrseq r0, msp\n"       // Thread used MSP → stack pointer in R0
         "mrsne r0, psp\n"       // Thread used PSP (RTOS tasks) → stack pointer in R0
+        "mov r1, lr\n"          // Preserve handler-entry EXC_RETURN
         "b HardFault_HandlerC\n"
     );
 }
@@ -143,7 +143,7 @@ __attribute__((naked)) void HardFault_Handler(void) {
 
 - An assembly entry stub or supported naked wrapper preserves the entry SP/EXC_RETURN before a C helper; verify its generated assembly
 - Check LR bit 2 to determine MSP vs PSP (RTOS tasks use PSP for thread stack; handlers and bare-metal threads use MSP)
-- The `in_fault` declaration above is not used by this example and provides no guard; nested faults may lock up the core. Do not rely on it for safe capture.
+- This stub has no nested-fault guard, stack-bounds check or persistence protocol. It is illustrative only; do not ship it as a production recorder.
 - Dump all fault registers AND stacked registers before halting — these are the only evidence
 
 ### Stacked Register Layout

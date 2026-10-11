@@ -1,7 +1,5 @@
 name = "quality-coordinator"
 description = "Code review, quality gates, implementation review, risk check, test coverage check, coordination between plan and execution, bug regression review."
-model = "gpt-5.3-codex"
-model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 
 [instructions]

@@ -31,6 +31,7 @@ Verify: `$debug-methodology` in ZCode chat.
 ## Tool Mapping
 
 When skills reference Claude Code tools:
+
 - `Skill("name")` → `$skill-name`
 - `Read`/`Write`/`Edit`/`Bash` → ZCode native tools
 - `Agent()` / `Task` → ZCode subagent system

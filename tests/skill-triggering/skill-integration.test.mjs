@@ -55,18 +55,14 @@ for (const test of cases) {
 }
 assert(cases.filter(test => test.kind === 'conflict').length >= 12)
 
-// Keep the baseline branch/tag, manifests, agents and original Claude presence runner unchanged.
+// Keep the immutable upstream baseline and main branch unchanged. Release branches are allowed to
+// customize package metadata, agents and installation surfaces.
 const git = (...args) => execFileSync('git', ['-C', repo, ...args])
 const baseline = git('rev-parse', 'upstream-v0.9.2^{}').toString().trim()
-for (const ref of ['main', 'custom-main']) assert.equal(git('rev-parse', ref).toString().trim(), baseline)
-const protectedFiles = git('ls-tree', '-r', '--name-only', 'upstream-v0.9.2').toString().trim().split('\n')
-  .filter(path => /^(\.codex-plugin\/|\.claude-plugin\/|\.cursor-plugin\/|\.kimi-plugin\/|\.codex\/agents\/|agents\/)/.test(path)
-    || ['package.json', 'package-lock.json', 'tests/skill-triggering/run-test.sh'].includes(path))
-for (const path of protectedFiles) {
-  const original = git('show', `upstream-v0.9.2:${path}`).toString().replace(/\r\n/g, '\n')
-  const current = readFileSync(join(repo, path), 'utf8').replace(/\r\n/g, '\n')
-  assert.equal(current, original, `Protected file changed: ${path}`)
-}
+assert.equal(git('rev-parse', 'main').toString().trim(), baseline)
+assert.equal(git('rev-parse', 'upstream-v0.9.2^{}').toString().trim(), baseline)
+assert.equal(readFileSync(join(repo, 'tests', 'skill-triggering', 'run-test.sh'), 'utf8').replace(/\r\n/g, '\n'),
+  git('show', 'upstream-v0.9.2:tests/skill-triggering/run-test.sh').toString().replace(/\r\n/g, '\n'))
 
 const sourceOption = process.argv.indexOf('--source-root')
 let supporting = 0

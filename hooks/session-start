@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SessionStart hook for embedded-workbench.
+# SessionStart hook for embedded-workbench-custom.
 # Reads session-start-content.md, wraps it in the Claude Code hook JSON envelope,
 # and prints that on stdout. All content lives in the .md file, so no payload
 # text is ever embedded in this script.
@@ -26,7 +26,7 @@ emit() {
 }
 
 if [ ! -f "$CONTENT_FILE" ]; then
-    emit "embedded-workbench active (content file missing)"
+    emit "embedded-workbench-custom active (content file missing)"
     exit 0
 fi
 

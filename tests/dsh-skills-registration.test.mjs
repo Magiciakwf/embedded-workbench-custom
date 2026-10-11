@@ -7,8 +7,9 @@
 //   node tests/dsh-skills-registration.test.mjs
 import { Context } from '@deepseek-ai/cordis'
 import SkillRegistry from '@deepseek-ai/dsh-skill'
+import { existsSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { apply as ewbApply, name as ewbName, Config as ewbConfig } from '../lib/index.js'
-import { apply as lpApply, name as lpName, Config as lpConfig } from '../../logicprobe/lib/index.js'
 
 const expected = {
   'embedded-workbench': [
@@ -29,7 +30,6 @@ const expected = {
     'state-machine-design',
     'stm32-driver-debug',
   ],
-  'logicprobe': ['logicprobe'],
 }
 
 const app = new Context()
@@ -38,7 +38,16 @@ new SkillRegistry(app)
 // it, so `enabled` reaches `apply` as the volatile reference it reads with `.get()`
 // rather than as the plain boolean written here.
 await app.plugin({ name: ewbName, Config: ewbConfig, apply: ewbApply }, { enabled: true })
-await app.plugin({ name: lpName, Config: lpConfig, apply: lpApply }, { enabled: true })
+
+// logicprobe is a separate optional sibling repository. Exercise its shared
+// registry only when that checkout is available; this plugin's standalone test
+// must remain reproducible on a clean clone.
+const logicprobeUrl = new URL('../../logicprobe/lib/index.js', import.meta.url)
+if (existsSync(fileURLToPath(logicprobeUrl))) {
+  const { apply: lpApply, name: lpName, Config: lpConfig } = await import(logicprobeUrl.href)
+  expected.logicprobe = ['logicprobe']
+  await app.plugin({ name: lpName, Config: lpConfig, apply: lpApply }, { enabled: true })
+}
 
 try {
   const cwd = process.cwd()
