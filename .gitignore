@@ -1,0 +1,6 @@
+*.swp
+*.swo
+*~
+.worktrees/
+node_modules/
+.mypy_cache/

@@ -1,0 +1,26 @@
+# Dependabot keeps the dsh bundle's npm dependencies current.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    # Only devDependencies are updated. The @deepseek-ai/* entries in
+    # `peerDependencies` are the compatibility claim this repository measures one
+    # DSH release at a time (see DSH-COMPATIBILITY.md): an automatic range bump
+    # there would declare support for a release nothing has verified.
+    allow:
+      - dependency-type: "development"
+    groups:
+      # One PR for all @deepseek-ai/* dev-dependency bumps (dsh API mirrors).
+      dsh-ecosystem:
+        patterns:
+          - "@deepseek-ai/*"
+
+  # GitHub Actions are pinned to commit SHAs; Dependabot opens the bump PRs.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

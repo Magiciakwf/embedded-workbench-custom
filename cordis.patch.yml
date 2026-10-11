@@ -1,0 +1,15 @@
+# embedded-workbench bundle patch — one insert over the profile root.
+#
+# Row ids are stable identity in the config tree; later layers (the user's
+# profile cordis.patch.yml, $DSH_HOME/cordis.patch.yml, --patch overlays)
+# override a row by id, replacing the whole `config` (no deep merge).
+#
+# The first-model-step gate is ON by default and deliberately small — it carries
+# the Plan Verification Gate and the context-budget rule, not the 1% Rule /
+# Red Flags enforcement scaffolding. Set `enabled: false` per profile to drop it.
+
+- insert:
+    - id: embedded-workbench
+      name: 'dsh-embedded-workbench'
+      config:
+        enabled: true

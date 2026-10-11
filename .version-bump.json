@@ -1,0 +1,25 @@
+{
+  "version": "0.9.2",
+  "files": {
+    ".claude-plugin/plugin.json": "version",
+    ".claude-plugin/marketplace.json": "plugins[0].version",
+    ".codex-plugin/plugin.json": "version",
+    ".cursor-plugin/plugin.json": "version",
+    ".kimi-plugin/plugin.json": "version",
+    ".version-bump.json": "version",
+    "package.json": "version",
+    "package-lock.json": "version"
+  },
+  "audit": {
+    "exclude": [
+      "CLAUDE.md",
+      "DSH-COMPATIBILITY.md",
+      ".dsh/INSTALL.md",
+      "RELEASE.md",
+      "scripts/bump-version.mjs",
+      "node_modules",
+      ".git",
+      ".mypy_cache"
+    ]
+  }
+}
