@@ -1,0 +1,7 @@
+case: negative-memory-unknown-hang
+thread: 01a12ace-a44e-7060-b355-625406ae3826
+observed: embedded-bug-investigator
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-bug-investigator\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\negative-memory-unknown-hang.jsonl
+completed: true
+final: embedded-bug-investigator — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-bug-investigator\SKILL.md`

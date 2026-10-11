@@ -1,0 +1,22 @@
+{
+  "name": "embedded-workbench-custom",
+  "interface": {
+    "displayName": "Embedded Workbench Custom"
+  },
+  "plugins": [
+    {
+      "name": "embedded-workbench-custom",
+      "description": "STM32 / FreeRTOS / Embedded Firmware development, debugging, analysis and code review",
+      "version": "0.9.3-custom.1",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    }
+  ]
+}

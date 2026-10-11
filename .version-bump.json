@@ -1,6 +1,8 @@
 {
-  "version": "0.9.2",
+  "version": "0.9.3-custom.1",
   "files": {
+    "plugin.json": "version",
+    ".agents/plugins/marketplace.json": "plugins[0].version",
     ".claude-plugin/plugin.json": "version",
     ".claude-plugin/marketplace.json": "plugins[0].version",
     ".codex-plugin/plugin.json": "version",
@@ -10,6 +12,13 @@
     "package.json": "version",
     "package-lock.json": "version"
   },
+  "textFiles": [
+    "INSTALL-WINDOWS.md",
+    "README.en-US.md",
+    "README.md",
+    "scripts/install-windows.ps1",
+    "tests/plugin-package.test.mjs"
+  ],
   "audit": {
     "exclude": [
       "CLAUDE.md",

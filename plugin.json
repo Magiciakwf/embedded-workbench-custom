@@ -1,0 +1,37 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "embedded-workbench-custom",
+  "version": "0.9.3-custom.1",
+  "description": "STM32 / FreeRTOS / Embedded Firmware development, debugging, analysis and code review",
+  "author": {
+    "name": "Amethyst Luna; custom integration by Magiciakwf",
+    "url": "https://github.com/Magiciakwf/embedded-workbench-custom"
+  },
+  "homepage": "https://github.com/Magiciakwf/embedded-workbench-custom",
+  "repository": "https://github.com/Magiciakwf/embedded-workbench-custom",
+  "license": "MIT",
+  "keywords": ["embedded", "firmware", "stm32", "freertos", "cortex-m", "hardfault", "code-review"],
+  "extensions": {
+    "com.openai": {
+      "hooks": "./hooks/codex-hooks.json",
+      "interface": {
+        "displayName": "Embedded Workbench Custom",
+        "shortDescription": "STM32 and FreeRTOS engineering with 16 focused skills",
+        "longDescription": "STM32, FreeRTOS and embedded firmware development, debugging, fault analysis, memory analysis and evidence-based code review with 16 focused skills and four Codex agents.",
+        "developerName": "Magiciakwf, based on Embedded Workbench by Amethyst Luna",
+        "category": "Development",
+        "capabilities": ["Interactive", "Read", "Write"],
+        "defaultPrompt": [
+          "Investigate an intermittent STM32 firmware reset",
+          "Diagnose a FreeRTOS synchronization failure",
+          "Review embedded C code for ISR and DMA safety"
+        ],
+        "websiteURL": "https://github.com/Magiciakwf/embedded-workbench-custom",
+        "privacyPolicyURL": "https://github.com/Magiciakwf/embedded-workbench-custom",
+        "termsOfServiceURL": "https://github.com/Magiciakwf/embedded-workbench-custom",
+        "brandColor": "#059669",
+        "logo": "./assets/app-icon.png"
+      }
+    }
+  }
+}

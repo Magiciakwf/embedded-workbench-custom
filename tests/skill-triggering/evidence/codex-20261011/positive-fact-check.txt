@@ -1,0 +1,7 @@
+case: positive-fact-check
+thread: 01a12acd-5c01-7541-af5a-e235c321946d
+observed: fact-check
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\fact-check\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\positive-fact-check.jsonl
+completed: true
+final: fact-check — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\fact-check\SKILL.md`

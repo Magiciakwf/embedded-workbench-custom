@@ -1,12 +1,12 @@
 {
-  "name": "embedded-workbench",
-  "version": "0.9.2",
-  "description": "Embedded C/C++ firmware development toolbox — 4 agents, 8 skills covering FreeRTOS, ISR, NVM storage, Keil MDK (AC5/AC6), ARMCLANG, HardFault triage, state machines, architecture principles, LVGL patterns, and claim fact-checking.",
+  "name": "embedded-workbench-custom",
+  "version": "0.9.3-custom.1",
+  "description": "STM32 / FreeRTOS / Embedded Firmware development, debugging, analysis and code review — 4 agents and 16 skills.",
   "author": {
     "name": "Amethyst Luna",
     "url": "https://github.com/AmethystLuna"
   },
-  "homepage": "https://github.com/AmethystLuna/embedded-workbench",
+  "homepage": "https://github.com/Magiciakwf/embedded-workbench-custom",
   "license": "MIT",
   "keywords": [
     "embedded",
@@ -23,10 +23,10 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Embedded Workbench",
-    "shortDescription": "Embedded C/C++ firmware toolbox — 4 agents, 8 skills",
-    "longDescription": "Embedded C/C++ firmware development toolbox for Cortex-M targets. Covers FreeRTOS tasks/ISR, Keil MDK builds (AC5/AC6), ARMCLANG, HardFault triage via .map analysis, state-machine design, architecture principles, and LVGL patterns. Battle-tested on real hardware projects.",
-    "developerName": "Amethyst Luna",
-    "websiteURL": "https://github.com/AmethystLuna/embedded-workbench"
+    "displayName": "Embedded Workbench Custom",
+    "shortDescription": "STM32 and FreeRTOS engineering with 16 focused skills",
+    "longDescription": "STM32, FreeRTOS and embedded firmware development, debugging, fault analysis, memory analysis and evidence-based code review.",
+    "developerName": "Magiciakwf, based on Embedded Workbench by Amethyst Luna",
+    "websiteURL": "https://github.com/Magiciakwf/embedded-workbench-custom"
   }
 }

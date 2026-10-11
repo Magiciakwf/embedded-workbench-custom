@@ -1,0 +1,7 @@
+case: conflict-fault-complete-evidence
+thread: 01a12aca-245c-79d0-a72c-0a9c4cf6d750
+observed: hardfault-analyzer
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\hardfault-analyzer\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-fault-complete-evidence.jsonl
+completed: true
+final: embedded-workbench-custom:hardfault-analyzer — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\hardfault-analyzer\SKILL.md`

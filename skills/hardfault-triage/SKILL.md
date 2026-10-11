@@ -1,6 +1,6 @@
 ---
 name: hardfault-triage
-description: "Use when triaging processor exception crashes — HardFault, MemManage, BusFault, UsageFault, data/prefetch abort, illegal instruction, or watchdog timeout. Covers fault-register interpretation, stack-frame extraction, PC-to-source resolution, and root-cause classification."
+description: "Use when a Cortex-M HardFault/MemManage/BusFault/UsageFault report has incomplete raw evidence and needs capture guidance or quick classification. Sufficient trustworthy registers, entry EXC_RETURN, frame PC/LR and matching ELF/MAP/disassembly use hardfault-analyzer. Unknown-domain watchdog resets use embedded-bug-investigator."
 ---
 
 # HardFault & Exception Triage
@@ -9,7 +9,13 @@ When a processor exception fires, the register file and stack frame are a black-
 
 The methodology is architecture-agnostic. Cortex-M (ARMv7-M/v8-M) fault registers and handlers are the primary reference; the same principles apply to Cortex-A aborts, RISC-V exceptions, Xtensa exception vectors, and other MCU fault paths.
 
-**REQUIRED BACKGROUND:** Load `Skill("debug-methodology")` for structured root-cause analysis. If the crash involves RTOS tasks or ISR context, also load `Skill("embedded-firmware-dev")`.
+## Routing boundary
+
+Use for an observed Cortex-M fault when capture is incomplete. Collect the exact core/build identity, implemented raw CFSR/HFSR/BFAR/MMFAR, handler-entry LR (`EXC_RETURN`), MSP/PSP, a bounds-checked stacked frame including PC/LR/xPSR, and matching ELF/MAP/disassembly. M0/M0+ lack this configurable fault-register set; request only implemented evidence.
+
+Once that evidence is sufficient and trustworthy, transfer it to `hardfault-analyzer`. Do not load `debug-methodology` or firmware design skills merely because a crash occurred. A watchdog reset without an established exception path starts with `embedded-bug-investigator`. References to other architecture examples below are contextual; do not apply Cortex-M register/frame rules to them.
+
+The illustrative signature/root-cause tables below list hypotheses, not proof. CPU fault status alone does not establish DMA failure, cache incoherence, stack exhaustion or an unclocked peripheral. In particular, a DMA controller error is not automatically a CPU IMPRECISERR.
 
 ## Triage Methodology
 
@@ -49,7 +55,7 @@ Classify the defect behind the fault signature:
 | Bus error at peripheral address | Unclocked or powered-down peripheral — RCC/PM init ordering |
 | Undefined instruction / invalid state | Corrupted function pointer, jumped to freed memory, stack smash overwrote LR |
 | Stack overflow (exception entry) | Task stack too small, deep call chain, large local variables, recursion |
-| Imprecise bus error (no valid address) | DMA to freed buffer, write-buffer coherency, cache maintenance |
+| Imprecise bus error (no valid address) | Earlier CPU writes; investigate preceding operations, not an assumed DMA defect |
 | MPU / memory protection violation | Region misconfiguration, attempted write to read-only region |
 
 ---
@@ -80,22 +86,24 @@ All at System Control Block (SCB) base `0xE000ED00`:
 | CFSR Value | Decomposition | Typical Root Cause |
 | ----------- | ------------- | ------------------ |
 | `0x00008200` | BFSR.PRECISERR (BFAR valid) | Null pointer dereference, access to unclocked peripheral |
-| `0x00000400` | BFSR.IMPRECISERR (BFAR not valid) | Write-buffer async fault; DMA target freed; cache coherency |
+| `0x00000400` | BFSR.IMPRECISERR (address not established by this bit) | Asynchronous CPU write fault; inspect preceding writes |
 | `0x00020000` | UFSR.INVSTATE | Tried to execute ARM code in Thumb mode; corrupted function pointer |
 | `0x00010000` | UFSR.UNDEFINSTR | Jumped to data region; function pointer to freed or zeroed memory |
-| `0x01000000` | UFSR.UNALIGNED | Unaligned load/store (CCR.UNALIGN_TRP must be enabled) |
+| `0x01000000` | UFSR.UNALIGNED | Unaligned access; some instructions fault regardless of CCR.UNALIGN_TRP |
 | `0x00000001` | MMFSR.IACCVIOL | Executing from XN (execute-never) region — MPU config |
 | `0x00000002` | MMFSR.DACCVIOL | Writing to read-only memory — MPU config |
-| `0x00000800` | BFSR.STKERR | Stack overflow on exception entry (push to full stack) |
-| `0x00001000` | BFSR.UNSTKERR | Stack corruption on exception return (pop from corrupted stack) |
+| `0x00000800` | BFSR.UNSTKERR | Fault during exception unstacking; validate frame/access permissions |
+| `0x00001000` | BFSR.STKERR | Fault during exception stacking; validate SP/bounds/access permissions |
 
 ---
 
 ## Cortex-M Stack Frame Capture
 
-The exception handler must be `__attribute__((naked))` — no compiler prologue — so SP points directly at the exception stack frame. The processor automatically pushes R0-R3, R12, LR, PC, PSR on exception entry.
+Capture entry EXC_RETURN and the selected stack before a C prologue, using an assembly entry stub or a supported naked wrapper. On the applicable Cortex-M model the core frame contains R0-R3, R12, LR, PC and xPSR; validate stacking errors, bounds and architecture before reading it.
 
 ### Minimal Fault Dump
+
+This legacy printf example is illustrative, not a production capture recorder. Prefer the debugger or a bounded existing recorder; capture entry EXC_RETURN and selected SP before a C prologue, validate frame bounds/errors before reading words, and preserve supported raw status before clearing it. printf can block, touch damaged state or fault again. See `hardfault-analyzer`'s capture reference after the evidence gate is met.
 
 ```c
 static void fault_dump_basic(const char *name) {
@@ -104,8 +112,10 @@ static void fault_dump_basic(const char *name) {
     printf("MMFAR: 0x%08lX  BFAR: 0x%08lX\n", SCB->MMFAR, SCB->BFAR);
 }
 
-static __attribute__((used)) void HardFault_HandlerC(uint32_t *stacked) {
+static __attribute__((used)) void HardFault_HandlerC(uint32_t *stacked,
+                                                     uint32_t exc_return) {
     fault_dump_basic("HardFault");
+    printf("EXC_RETURN: 0x%08lX\n", exc_return);
     printf("R0: 0x%08lX  R1: 0x%08lX  R2: 0x%08lX  R3: 0x%08lX\n",
            stacked[0], stacked[1], stacked[2], stacked[3]);
     printf("R12: 0x%08lX  LR: 0x%08lX  PC: 0x%08lX  PSR: 0x%08lX\n",
@@ -114,18 +124,16 @@ static __attribute__((used)) void HardFault_HandlerC(uint32_t *stacked) {
 }
 ```
 
-### Naked Handler With Nested-Fault Guard
+### Illustrative Naked Entry Stub
 
 ```c
-// Prevent infinite recursion if the fault handler itself faults (e.g., UART not init'd)
-static volatile uint8_t in_fault = 0;
-
 __attribute__((naked)) void HardFault_Handler(void) {
     __asm volatile(
         "tst lr, #4\n"          // EXC_RETURN bit 2: 0=MSP, 1=PSP
         "ite eq\n"
         "mrseq r0, msp\n"       // Thread used MSP → stack pointer in R0
         "mrsne r0, psp\n"       // Thread used PSP (RTOS tasks) → stack pointer in R0
+        "mov r1, lr\n"          // Preserve handler-entry EXC_RETURN
         "b HardFault_HandlerC\n"
     );
 }
@@ -133,9 +141,9 @@ __attribute__((naked)) void HardFault_Handler(void) {
 
 **Key points**:
 
-- `naked` attribute is mandatory — without it, the compiler prologue overwrites SP before you can read the stacked frame
+- An assembly entry stub or supported naked wrapper preserves the entry SP/EXC_RETURN before a C helper; verify its generated assembly
 - Check LR bit 2 to determine MSP vs PSP (RTOS tasks use PSP for thread stack; handlers and bare-metal threads use MSP)
-- The nested-fault guard (`in_fault`) prevents infinite HardFault recursion when the handler itself triggers a fault
+- This stub has no nested-fault guard, stack-bounds check or persistence protocol. It is illustrative only; do not ship it as a production recorder.
 - Dump all fault registers AND stacked registers before halting — these are the only evidence
 
 ### Stacked Register Layout
@@ -143,7 +151,7 @@ __attribute__((naked)) void HardFault_Handler(void) {
 ```text
 Exception frame on stack (Cortex-M, from low to high address):
 Offset 0: R0          Offset 16: R12
-Offset 4: R1          Offset 20: LR  (exception return address)
+Offset 4: R1          Offset 20: LR  (interrupted context's LR, not entry EXC_RETURN)
 Offset 8: R2          Offset 24: PC  (faulting instruction)
 Offset 12: R3         Offset 28: PSR (program status register)
 ```
@@ -184,7 +192,7 @@ Fault type?
 │   ├── BFAR in peripheral map → unclocked peripheral; check RCC/clock-gating init order
 │   └── BFAR in flash/ROM      → alignment fault or const-data access violation
 ├── Imprecise bus error (BFAR not valid)
-│   └── Suspect: DMA to freed buffer, cache-coherency after peripheral write, write-buffer
+│   └── Inspect preceding CPU writes; DMA controller faults need separate evidence
 ├── INVSTATE or UNDEFINSTR
 │   ├── PC is a function pointer → freed object, overwritten vtable, buffer overflow on heap
 │   └── PC is a return address   → stack corruption (local array overflow overwrote LR)
@@ -204,7 +212,7 @@ Fault type?
 | PC in SRAM region | Corrupted function pointer, stack overflow into code | Stack high-water marks, vtable/heap integrity |
 | PC = `0x00000000` or reset vector | Null function pointer call, uninitialized callback | Backtrace through LR to find caller |
 | BFAR / fault-address = peripheral base | Unclocked or powered-down peripheral | Init ordering: clock enable before register access |
-| IMPRECISERR / async fault, no valid address | DMA to freed buffer, cache coherency | DMA completion vs buffer deallocation ordering |
+| IMPRECISERR / async fault, no established address | Earlier CPU write fault | Preceding stores, bus/memory mapping and exact core evidence |
 | INVSTATE + LR in event dispatch path | Timer callback on already-freed RTOS object | Timer lifecycle: stop timer before freeing object |
 | HardFault escalates from other handler | BusFault/MemManage/UsageFault not individually enabled | Enable individual fault handlers (SHCSR register) for finer diagnostics |
 | Fault only above certain uptime | Slow resource leak: memory, timers, file descriptors | Runtime telemetry trend before crash |
@@ -222,7 +230,7 @@ The `.map` file is essential for crash analysis. Key sections:
 | **Memory Map of the image** | Verify the fault address falls in a valid region (Flash, SRAM, peripheral). Addresses outside all regions indicate a wild pointer. |
 | **Cross References** | Trace the call chain backward. Which `.o` files call into the faulting function? |
 
-For build-optimization `.map` analysis (size optimization, memory budget, linker garbage collection), see `Skill("keil-mdk-build")`.
+For memory budget, placement and size attribution, see `Skill("firmware-memory-analyzer")`; use `Skill("keil-mdk-build")` only for a concrete Keil build/packaging obstacle.
 
 ---
 
@@ -230,8 +238,9 @@ For build-optimization `.map` analysis (size optimization, memory budget, linker
 
 | Scenario | Load |
 | -------- | ---- |
-| Build-level .map analysis, ROM/RAM size optimization | `Skill("keil-mdk-build")` |
-| Structured root-cause analysis methodology | `Skill("debug-methodology")` |
-| FreeRTOS task stack overflow, ISR context faults | `Skill("embedded-firmware-dev")` |
-| State machine lockup triggering watchdog reset | `Skill("state-machine-design")` |
+| Trustworthy raw registers, entry EXC_RETURN, frame and matching artifacts | `Skill("hardfault-analyzer")` |
+| MAP/ELF placement, Flash/RAM budget | `Skill("firmware-memory-analyzer")` |
+| Localized defect needing additional causal reconstruction | `Skill("debug-methodology")`, only if needed |
+| Established FreeRTOS task stack or ISR API failure | `Skill("freertos-debug")` |
+| Unknown-domain watchdog reset | `Skill("embedded-bug-investigator")` |
 | Naked handler and linker section patterns | `Skill("c-cpp-dev")` |

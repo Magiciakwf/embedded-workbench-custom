@@ -1,0 +1,7 @@
+case: conflict-new-uart-module
+thread: 01a12acb-478b-7641-a2d6-c2abc42ecf2d
+observed: embedded-code-generator
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-code-generator\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-new-uart-module.jsonl
+completed: true
+final: embedded-code-generator — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\embedded-code-generator\SKILL.md`

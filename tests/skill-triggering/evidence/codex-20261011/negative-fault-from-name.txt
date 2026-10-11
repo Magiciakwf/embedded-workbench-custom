@@ -1,0 +1,7 @@
+case: negative-fault-from-name
+thread: 01a12acd-a82e-74a3-9156-f4ae8ca77571
+observed: hardfault-triage
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\hardfault-triage\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\negative-fault-from-name.jsonl
+completed: true
+final: hardfault-triage   `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\hardfault-triage\SKILL.md`

@@ -33,11 +33,12 @@ Skills are auto-discovered from the standard `.claude/skills/` and `.codex/skill
 ## Tool Mapping
 
 When skills reference Claude Code tools:
+
 - `Skill("name")` → OpenCode's native `skill` tool
 - `Agent()` / `Task` → `@mention` syntax
 - `Write`/`Edit`/`Read`/`Bash` → OpenCode native tools
 
 ## Getting Help
 
-- Issues: https://github.com/AmethystLuna/embedded-workbench/issues
-- Docs: https://github.com/AmethystLuna/embedded-workbench
+- Issues: <https://github.com/AmethystLuna/embedded-workbench/issues>
+- Docs: <https://github.com/AmethystLuna/embedded-workbench>

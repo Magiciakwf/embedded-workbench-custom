@@ -1,0 +1,7 @@
+case: positive-stm32-path
+thread: 01a12acc-21c0-7622-ad34-c924e29352d3
+observed: stm32-driver-debug
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\stm32-driver-debug\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\positive-stm32-path.jsonl
+completed: true
+final: stm32-driver-debug — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\stm32-driver-debug\SKILL.md`

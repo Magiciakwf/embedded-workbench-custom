@@ -1,0 +1,7 @@
+case: negative-desktop
+thread: 01a12ace-aec1-75d3-b1ea-026de0abd898
+observed: NONE
+source: no specialist SKILL.md read
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\negative-desktop.jsonl
+completed: true
+final: NONE

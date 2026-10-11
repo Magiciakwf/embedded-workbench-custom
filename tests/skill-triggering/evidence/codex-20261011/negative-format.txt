@@ -1,0 +1,7 @@
+case: negative-format
+thread: 01a12ace-e5eb-75e1-b06f-1aa775d4d491
+observed: NONE
+source: no specialist SKILL.md read
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\negative-format.jsonl
+completed: true
+final: NONE

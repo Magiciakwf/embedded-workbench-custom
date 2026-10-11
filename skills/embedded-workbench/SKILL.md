@@ -1,6 +1,6 @@
 ---
 name: embedded-workbench
-description: "Use when starting any non-trivial coding task — loads risk-proportional workflows, engineering policies, and principles for embedded C/C++ firmware development. NOT for trivial single-line fixes, formatting-only changes, or read-only queries."
+description: "Use when coordinating a substantial embedded firmware investigation, implementation or review, selecting its first specialist, or escalating across fault domains. Route by intent and evidence using the smallest necessary specialist set. Not trivial edits, formatting, simple file reads or unrelated software tasks."
 ---
 
 <SUBAGENT-STOP>
@@ -13,13 +13,7 @@ Core workflow system and engineering principles.
 
 ## Instruction Priority
 
-This plugin's skills and policies override default system behavior, but **user instructions always take precedence**:
-
-1. **User's explicit instructions** (CLAUDE.md, AGENTS.md, project rules, direct requests) — highest priority
-2. **Plugin skills and workflows** — override default system behavior where they conflict
-3. **Default system prompt** — lowest priority
-
-If a user's CLAUDE.md says "skip design review for hotfixes" and the workflow requires it, follow the user. The user is in control.
+These skills are supplementary guidance. They never override host system, developer, safety, permission, or tool instructions. Apply instructions in the host-defined order; within the remaining discretion, follow the user's request and applicable project rules before plugin workflow preferences. If a project rule explicitly skips a plugin review step, skip it unless a higher-priority instruction requires the check.
 
 ## Platform Adaptation
 
@@ -70,7 +64,7 @@ You have crossed into a heavier path when the change spans more than one module,
 
 Complexity decides **how much process**; the budget decides **whether to split the window**. Split it for discovery whose detail you will not cite again — a suite, a log sweep, docs, several independent areas. Keep it for phases that share context (plan → implement → test), or when the change is quick and latency matters.
 
-**You cannot see your budget**: most harnesses show a token count to the user's interface, not to you, so never guess one. Act on what you do see — a result truncated, pruned, or spilled to a file, or a compaction / checkpoint summary. When a large step shows no signal at all, **ask the user** what to spend context on rather than deciding silently; if nobody can answer (headless run), take the reversible option and say so.
+**You cannot see your budget**: most harnesses show a token count to the user's interface, not to you, so never guess one. Act on what you do see — a result truncated, pruned, or spilled to a file, or a compaction / checkpoint summary. Without such a signal, continue with bounded, reversible progress toward the user's goal. Ask only when a choice would materially change scope, cost, permissions, or outcome.
 
 Delegation is not free: the sub-agent spends its own tokens and its summary still lands here. When it needs context you already built, inherit it (dsh `subagent_fork`; Codex `fork_turns`, default `all`; Claude Code fork mode; Kimi `/btw`) instead of rebuilding it in a prompt. Per-harness markers and tool names: `references/platform-tool-mapping.md`.
 
@@ -184,30 +178,39 @@ If unsure, treat a skill as Rigid until you confirm otherwise.
 
 ## Skill Loading Priority
 
-When multiple skills could apply, use this order:
+Prefer the smallest specialist set that can solve the task. Do not invoke multiple overlapping skills merely for completeness.
 
-1. **Diagnosis skills first** — `debug-methodology`, `hardfault-triage`, `logicprobe` (external plugin; use the built-in `fact-check` fallback if logicprobe is not installed). These determine WHAT is wrong.
-2. **Design skills second** — `state-machine-design`. These determine HOW to fix it.
-3. **Implementation skills third** — `c-cpp-dev`, `embedded-firmware-dev`, `keil-mdk-build`. These guide execution.
+优先选择能解决任务的最小专家集；不要为求完整而同时加载多个重叠 Skill。
 
-"HardFault crash" → hardfault-triage first, then debug-methodology if root cause is complex.
-"Add retry logic" → state-machine-design first, then c-cpp-dev for implementation.
-"Review this design" → logicprobe first (or the built-in fact-check fallback if logicprobe is not installed), then escalate findings to design-reviewer agent.
+1. Classify the user's intent: read-only review, explanation/design, runtime diagnosis, artifact/fact analysis, or requested code implementation. An explicit skill request takes precedence.
+2. For diagnosis, decide whether the causal domain is established. Peripheral/RTOS keywords listed as competing guesses do not establish a domain. Follow unknown → localize fault domain → specialist analysis.
+3. Choose one primary specialist from the routing table. For a Cortex-M fault, distinguish insufficient capture from sufficient trustworthy raw evidence and matching artifacts. A known fault class has its own triage entry even if its originating defect is unknown.
+4. Add a secondary skill only for a specific unanswered question or contract. General methodology is optional after localization, not a mandatory companion to every expert. Carry findings and uncertainties forward.
+5. Load this coordinator once per task. Specialists that refer back to its workflow gates reuse the already loaded guidance; do not recursively reload it or bounce between experts without new evidence. Diagnosis and review alone do not authorize repairs.
 
-**Cross-domain links**: load a secondary skill only when the primary skill's findings call for it — don't pre-load. Each skill's own `Use when` and NOT clauses already tell you when it applies.
+未知问题不要过早跳入专项 Skill：未知 → 定位故障域 → 专家分析。跨域升级时携带已有证据，只为具体缺口增加专家；审查和定位本身不授权修复。
 
 ## Domain Skills
 
-Load domain-specific guidance when the task matches. Skills marked with 📚 have deep reference material in their `references/` directory.
+Choose the primary domain guidance below when the task matches; load its references only for the relevant question.
 
-| Task | Skill | Type | Deep Refs |
-|------|-------|:----:|:---------:|
-| Debugging crashes, HardFault, logs | `Skill("debug-methodology")` | Rigid | 📚 case study |
-| HardFault / exception triage, fault registers, .map crash resolution | `Skill("hardfault-triage")` | Flexible | — |
-| C/C++ code generation or style | `Skill("c-cpp-dev")` | Flexible | — |
-| FreeRTOS, ISR, NVM storage, sensor drivers | `Skill("embedded-firmware-dev")` | Flexible | 📚 architecture, patterns, LVGL |
-| Keil MDK, ARMCLANG, build system, .map optimization | `Skill("keil-mdk-build")` | Flexible | — |
-| State machines, retries, timeouts | `Skill("state-machine-design")` | Flexible | — |
+| Task / 任务与证据 | Primary skill | Boundary / 边界 |
+|---|---|---|
+| Unknown resets, hangs, intermittent/timing-sensitive failure / 未知复位、卡死、偶发异常 | `Skill("embedded-bug-investigator")` | Localize first; a list of possible subsystems is not evidence |
+| Localized fault domain needing timeline → call chain → state → evidence → root cause / 已定位后系统化取证 | `Skill("debug-methodology")` | Optional methodology after localization; not unknown-failure intake |
+| Known/strongly implicated FreeRTOS scheduling, synchronization, events, task stack, ISR API / RTOS 调度与同步故障 | `Skill("freertos-debug")` | Runtime failure, not ordinary API teaching or new module design |
+| Localized STM32 clock, GPIO/AF, UART/SPI/I2C/ADC/DMA/TIM, NVIC/EXTI/IRQ, HAL/LL / STM32 外设路径 | `Skill("stm32-driver-debug")` | Actual hardware/driver path, not pure RTOS synchronization |
+| Cortex-M fault with insufficient evidence / 刚进入 Fault、证据不足 | `Skill("hardfault-triage")` | Capture supported registers, entry EXC_RETURN, MSP/PSP, frame PC/LR, matching ELF/MAP |
+| Sufficient trustworthy Cortex-M raw fault evidence and matching artifacts / Fault 原始证据齐全 | `Skill("hardfault-analyzer")` | Validate frame/build identity, then strict architecture analysis |
+| Exact-part datasheet/RM/PM/errata, register, timing, electrical fact / 精确器件事实 | `Skill("datasheet-reader")` | Bounded fact lookup, not open-ended code debugging |
+| ELF/MAP/linker/scatter, Flash/RAM, VMA/LMA, stack/heap, placement or capacity / 内存归因与预算 | `Skill("firmware-memory-analyzer")` | Toolchain independent; pure Keil MAP analysis also starts here |
+| Keil/UV4/AC5/AC6/Armclang build/link errors, migration or image packaging / Keil 工具链 | `Skill("keil-mdk-build")` | Add only for a concrete toolchain obstacle during memory analysis |
+| Requested complete module/driver/BSP/HAL wrapper/task/protocol/buffer implementation or repair / 明确代码实施 | `Skill("embedded-code-generator")` | Integrate and verify; review/explanation is not an implementation request |
+| Local C/C++ ownership, lifetime, volatile, alignment, section/API details or refactor / 局部语言实现 | `Skill("c-cpp-dev")` | Complete embedded modules start with embedded-code-generator |
+| Explicit code review/audit/bug finding/diff inspection without edits / 只读代码审查 | `Skill("embedded-code-review")` | Findings only; an explicit subsequent repair goes to embedded-code-generator |
+| Embedded state transitions, ACK/NACK, timeout, retry, recovery, fault gating / 状态转换与恢复 | `Skill("state-machine-design")` | Transition contract; additional experts only for an evidenced dependency |
+| Design documents versus API/path/enum/count/mechanism facts / 设计与代码事实核验 | `Skill("fact-check")` | Built-in fallback; executable behavioral claims need external logicprobe |
+| General firmware design: FreeRTOS usage, ISR, NVM, sensor/async lifecycle, LVGL / 通用固件设计规范 | `Skill("embedded-firmware-dev")` | Design guidance; implementation goes to generator, deep RTOS failure to freertos-debug |
 
 Design doc review, claim verification, logic primitive + adversarial probing → `Skill("logicprobe")` — **standalone plugin**; when logicprobe is not installed, use the built-in `Skill("fact-check")` fallback for claim-by-claim verification (see Plan Verification Gate above).
 

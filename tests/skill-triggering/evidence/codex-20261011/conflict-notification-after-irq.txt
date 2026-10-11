@@ -1,0 +1,7 @@
+case: conflict-notification-after-irq
+thread: 01a12aca-245c-7e61-89fa-d60582baf71b
+observed: freertos-debug
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\freertos-debug\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-notification-after-irq.jsonl
+completed: true
+final: freertos-debug — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\freertos-debug\SKILL.md`

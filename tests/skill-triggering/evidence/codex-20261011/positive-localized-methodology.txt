@@ -1,0 +1,7 @@
+case: positive-localized-methodology
+thread: 01a12acc-0915-7501-a81c-feb0857122ce
+observed: debug-methodology
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\debug-methodology\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\positive-localized-methodology.jsonl
+completed: true
+final: embedded-workbench-custom:debug-methodology   `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\debug-methodology\SKILL.md`

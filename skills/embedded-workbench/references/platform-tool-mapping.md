@@ -101,7 +101,7 @@ What each harness actually exposes to the **model** about its context budget, ch
 Two consequences worth remembering:
 
 - **A budget readout reaching the model is the exception, not the rule.** Only Codex documents one, and it is off by default. Everywhere else, act on the truncation, spill, or compaction notice your harness actually shows.
-- **With no signal, ask the user instead of guessing.** Say what you are about to consume, that this harness gives you no budget readout, and the options with their costs, then do what they choose — falling back to the reversible option only when no one can answer.
+- **With no signal, do not invent a budget constraint.** Continue with bounded, reversible progress toward the user's goal. Ask only when the available choices materially change scope, cost, permissions, or outcome.
 
 ## Sub-Agent Platform Equivalents
 

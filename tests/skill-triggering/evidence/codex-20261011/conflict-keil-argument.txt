@@ -1,0 +1,7 @@
+case: conflict-keil-argument
+thread: 01a12aca-d6d7-75e2-9359-9734c52d48cf
+observed: keil-mdk-build
+source: C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\keil-mdk-build\SKILL.md
+rawEvidence: C:\Users\k2005\Documents\Codex\2026-10-11\embedded-workbench-github-skill-embedded-workbench\work\release-runtime\routing-31\conflict-keil-argument.jsonl
+completed: true
+final: keil-mdk-build — `C:\Users\k2005\.codex\plugins\cache\embedded-workbench-custom\embedded-workbench-custom\0.9.3-custom.1\skills\keil-mdk-build\SKILL.md`
